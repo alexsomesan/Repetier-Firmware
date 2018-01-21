@@ -61,7 +61,7 @@
 #undef Y_MIN_PIN
 #define Y_MIN_PIN -1
 #undef Z_MAX_PIN
-#define Z_MAX_PIN -1
+#define Z_MAX_PIN ORIG_Z_MAX_PIN
 
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in. Requires more ram, has only 63 byte input buffer.
 // Uncomment the following line if you are using Arduino compatible firmware made for Arduino version earlier then 1.0
@@ -256,7 +256,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define MIN_HARDWARE_ENDSTOP_Y false
 #define ENDSTOP_PULLUP_Z_MIN false
 #define ENDSTOP_Z_MIN_INVERTING false
-#define MIN_HARDWARE_ENDSTOP_Z true
+#define MIN_HARDWARE_ENDSTOP_Z false
 #define ENDSTOP_PULLUP_Z2_MINMAX true
 #define ENDSTOP_Z2_MINMAX_INVERTING false
 #define MINMAX_HARDWARE_ENDSTOP_Z2 false
@@ -267,8 +267,8 @@ It also can add a delay to wait for spindle to run on full speed.
 #define ENDSTOP_Y_MAX_INVERTING false
 #define MAX_HARDWARE_ENDSTOP_Y true
 #define ENDSTOP_PULLUP_Z_MAX true
-#define ENDSTOP_Z_MAX_INVERTING false
-#define MAX_HARDWARE_ENDSTOP_Z false
+#define ENDSTOP_Z_MAX_INVERTING true
+#define MAX_HARDWARE_ENDSTOP_Z true
 #define ENDSTOP_PULLUP_X2_MIN true
 #define ENDSTOP_PULLUP_Y2_MIN true
 #define ENDSTOP_PULLUP_Z2_MINMAX true
@@ -295,21 +295,21 @@ It also can add a delay to wait for spindle to run on full speed.
 
 #define min_software_endstop_x true
 #define min_software_endstop_y true
-#define min_software_endstop_z false
+#define min_software_endstop_z true
 #define max_software_endstop_x false
 #define max_software_endstop_y false
-#define max_software_endstop_z true
+#define max_software_endstop_z false
 #define DOOR_PIN -1
 #define DOOR_PULLUP 1
 #define DOOR_INVERTING 0
-#define ENDSTOP_X_BACK_MOVE 20
-#define ENDSTOP_Y_BACK_MOVE 20
-#define ENDSTOP_Z_BACK_MOVE 8
+#define ENDSTOP_X_BACK_MOVE 5
+#define ENDSTOP_Y_BACK_MOVE 5
+#define ENDSTOP_Z_BACK_MOVE 5
 #define ENDSTOP_X_RETEST_REDUCTION_FACTOR 1
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 1
 #define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 3
-#define ENDSTOP_X_BACK_ON_HOME 5
-#define ENDSTOP_Y_BACK_ON_HOME 5
+#define ENDSTOP_X_BACK_ON_HOME 0
+#define ENDSTOP_Y_BACK_ON_HOME 0
 #define ENDSTOP_Z_BACK_ON_HOME 0
 #define ALWAYS_CHECK_ENDSTOPS 1
 #define MOVE_X_WHEN_HOMED 0
@@ -335,28 +335,28 @@ It also can add a delay to wait for spindle to run on full speed.
 #define INVERT_Z4_DIR 0
 #define X_HOME_DIR 1
 #define Y_HOME_DIR 1
-#define Z_HOME_DIR -1
+#define Z_HOME_DIR 1
 #define X_MAX_LENGTH 245
 #define Y_MAX_LENGTH 231
-#define Z_MAX_LENGTH 240
+#define Z_MAX_LENGTH 247.042
 #define X_MIN_POS -25
 #define Y_MIN_POS -12
-#define Z_MIN_POS 0
+#define Z_MIN_POS -5
 
 
-#define DISTORTION_CORRECTION 0
+#define DISTORTION_CORRECTION 1
 #define DISTORTION_CORRECTION_POINTS 5
 #define DISTORTION_LIMIT_TO 2
 #define DISTORTION_CORRECTION_R 100
-#define DISTORTION_PERMANENT 0
+#define DISTORTION_PERMANENT 1
 #define DISTORTION_UPDATE_FREQUENCY 15
 #define DISTORTION_START_DEGRADE 0.5
 #define DISTORTION_END_HEIGHT 1
 #define DISTORTION_EXTRAPOLATE_CORNERS 0
 #define DISTORTION_XMIN 10
 #define DISTORTION_YMIN 10
-#define DISTORTION_XMAX 190
-#define DISTORTION_YMAX 190
+#define DISTORTION_XMAX 185
+#define DISTORTION_YMAX 205
 
 // ##########################################################################################
 // ##                           Movement settings                                          ##
@@ -381,14 +381,14 @@ It also can add a delay to wait for spindle to run on full speed.
 #define HOMING_FEEDRATE_X 50
 #define HOMING_FEEDRATE_Y 50
 #define HOMING_FEEDRATE_Z 5
-#define HOMING_ORDER HOME_ORDER_XYTZ
-#define ZHOME_PRE_RAISE 2
+#define HOMING_ORDER HOME_ORDER_ZYX
+#define ZHOME_PRE_RAISE 0
 #define ZHOME_PRE_RAISE_DISTANCE 30
 #define RAISE_Z_ON_TOOLCHANGE 0
 #define ZHOME_MIN_TEMPERATURE 20
 #define ZHOME_HEAT_ALL 0
 #define ZHOME_HEAT_HEIGHT 20
-#define ZHOME_X_POS 110
+#define ZHOME_X_POS 120
 #define ZHOME_Y_POS 110
 #define ENABLE_BACKLASH_COMPENSATION 1
 #define X_BACKLASH 0
@@ -551,7 +551,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_XY_SPEED 150
 #define Z_PROBE_SWITCHING_DISTANCE 5
 #define Z_PROBE_REPETITIONS 2
-#define Z_PROBE_HEIGHT 1.3
+#define Z_PROBE_HEIGHT 0.722
 #define Z_PROBE_DELAY 500
 #define Z_PROBE_START_SCRIPT "M340 P0 S700"
 #define Z_PROBE_FINISHED_SCRIPT "M340 P0 S1500"
