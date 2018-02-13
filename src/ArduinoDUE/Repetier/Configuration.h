@@ -249,13 +249,13 @@ It also can add a delay to wait for spindle to run on full speed.
 // ################ Endstop configuration #####################
 
 #define MULTI_ZENDSTOP_HOMING 0
-#define ENDSTOP_PULLUP_X_MIN true
+#define ENDSTOP_PULLUP_X_MIN false
 #define ENDSTOP_X_MIN_INVERTING false
 #define MIN_HARDWARE_ENDSTOP_X false
-#define ENDSTOP_PULLUP_Y_MIN true
+#define ENDSTOP_PULLUP_Y_MIN false
 #define ENDSTOP_Y_MIN_INVERTING false
-#define MIN_HARDWARE_ENDSTOP_Y false
-#define ENDSTOP_PULLUP_Z_MIN true
+#define MIN_HARDWARE_ENDSTOP_Y true
+#define ENDSTOP_PULLUP_Z_MIN false
 #define ENDSTOP_Z_MIN_INVERTING false
 #define MIN_HARDWARE_ENDSTOP_Z false
 #define ENDSTOP_PULLUP_Z2_MINMAX true
@@ -266,7 +266,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define MAX_HARDWARE_ENDSTOP_X true
 #define ENDSTOP_PULLUP_Y_MAX false
 #define ENDSTOP_Y_MAX_INVERTING false
-#define MAX_HARDWARE_ENDSTOP_Y true
+#define MAX_HARDWARE_ENDSTOP_Y false
 #define ENDSTOP_PULLUP_Z_MAX false
 #define ENDSTOP_Z_MAX_INVERTING false
 #define MAX_HARDWARE_ENDSTOP_Z true
@@ -290,15 +290,17 @@ It also can add a delay to wait for spindle to run on full speed.
 #define Y2_MAX_PIN -1
 #define Z2_MINMAX_PIN -1
 
+#undef Y_MIN_PIN
+#define Y_MIN_PIN ORIG_Y_MAX_PIN
 
 
 #define max_software_endstop_r true
 
 #define min_software_endstop_x true
-#define min_software_endstop_y true
+#define min_software_endstop_y false
 #define min_software_endstop_z true
 #define max_software_endstop_x false
-#define max_software_endstop_y false
+#define max_software_endstop_y true
 #define max_software_endstop_z false
 #define DOOR_PIN -1
 #define DOOR_PULLUP 1
@@ -335,7 +337,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define INVERT_Z3_DIR 0
 #define INVERT_Z4_DIR 0
 #define X_HOME_DIR 1
-#define Y_HOME_DIR 1
+#define Y_HOME_DIR -1
 #define Z_HOME_DIR 1
 #define X_MAX_LENGTH 360
 #define Y_MAX_LENGTH 360
@@ -510,9 +512,9 @@ but good approximations can be determined by experimentation.
 #define KEEP_ALIVE_INTERVAL 2000
 #define WAITING_IDENTIFIER "wait"
 #define ECHO_ON_EXECUTE 1
-#define EEPROM_MODE 2
+#define EEPROM_MODE 1
 #undef PS_ON_PIN
-#define PS_ON_PIN ORIG_PS_ON_PIN
+#define PS_ON_PIN -1
 #define JSON_OUTPUT 0
 
 /* ======== Servos =======
@@ -534,7 +536,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FAN_KICKSTART_TIME  200
 #define MAX_FAN_PWM 255
 
-        #define FEATURE_WATCHDOG 1
+#define FEATURE_WATCHDOG 1
 
 // #################### Z-Probing #####################
 
