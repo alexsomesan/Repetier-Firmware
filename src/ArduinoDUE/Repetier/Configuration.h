@@ -458,7 +458,7 @@ It also can add a delay to wait for spindle to run on full speed.
 #define TMC2130_EXT2_CS_PIN -1
 
 // Per-axis current setting in mA { X, Y, Z, E0, E1, E2}
-#define MOTOR_CURRENT { 1000,1000,1000,800,1000,1000 }
+#define MOTOR_CURRENT { 1000,1000,1000,800,0,0 }
 
 /**  Global settings - these apply to all configured drivers
 Per-axis values will override these
@@ -468,7 +468,7 @@ Per-axis values will override these
 #define TMC2130_STALLGUARD          0  // Sensorless homing sensitivity (between -63 and +64)
 #define TMC2130_STALLGUARD_X -2
 #define TMC2130_STALLGUARD_Y -2
-#define TMC2130_STALLGUARD_Z -13
+#define TMC2130_STALLGUARD_Z -7
 
 /** PWM values for chopper tuning
 only change if you know what you're doing
