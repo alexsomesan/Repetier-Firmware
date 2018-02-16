@@ -523,8 +523,8 @@ M340 P<servoId> S<pulseInUS>   / ServoID = 0..3  pulseInUs = 500..2500
 Servos are controlled by a pulse width normally between 500 and 2500 with 1500ms in center position. 0 turns servo off.
 WARNING: Servos can draw a considerable amount of current. Make sure your system can handle this or you may risk your hardware!
 */
-#define FEATURE_SERVO 0
-#define SERVO0_PIN 11
+#define FEATURE_SERVO 1
+#define SERVO0_PIN 5
 #define SERVO1_PIN -1
 #define SERVO2_PIN -1
 #define SERVO3_PIN -1
@@ -532,7 +532,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define SERVO1_NEUTRAL_POS  -1
 #define SERVO2_NEUTRAL_POS  -1
 #define SERVO3_NEUTRAL_POS  -1
-#define UI_SERVO_CONTROL 0
+#define UI_SERVO_CONTROL 1
 #define FAN_KICKSTART_TIME  200
 #define MAX_FAN_PWM 255
 
@@ -543,28 +543,28 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_Z_OFFSET 0
 #define Z_PROBE_Z_OFFSET_MODE 0
 #define UI_BED_COATING 1
-#define FEATURE_Z_PROBE 0
+#define FEATURE_Z_PROBE 1
 #define EXTRUDER_IS_Z_PROBE 0
 #define Z_PROBE_DISABLE_HEATERS 0
 #define Z_PROBE_BED_DISTANCE 10
-#define Z_PROBE_PIN -1
+#define Z_PROBE_PIN ORIG_Z_MIN_PIN
 #define Z_PROBE_PULLUP 0
-#define Z_PROBE_ON_HIGH 0
+#define Z_PROBE_ON_HIGH 1
 #define Z_PROBE_X_OFFSET 0
 #define Z_PROBE_Y_OFFSET 0
 #define Z_PROBE_WAIT_BEFORE_TEST 0
 #define Z_PROBE_SPEED 2
 #define Z_PROBE_XY_SPEED 150
-#define Z_PROBE_SWITCHING_DISTANCE 1
-#define Z_PROBE_REPETITIONS 1
+#define Z_PROBE_SWITCHING_DISTANCE 5
+#define Z_PROBE_REPETITIONS 2
 #define Z_PROBE_HEIGHT 40
 #define Z_PROBE_DELAY 0
-#define Z_PROBE_START_SCRIPT ""
-#define Z_PROBE_FINISHED_SCRIPT ""
+#define Z_PROBE_START_SCRIPT "M340 P0 S700"
+#define Z_PROBE_FINISHED_SCRIPT "M340 P0 S1500"
 #define Z_PROBE_RUN_AFTER_EVERY_PROBE ""
 #define Z_PROBE_REQUIRES_HEATING 0
 #define Z_PROBE_MIN_TEMPERATURE 150
-#define FEATURE_AUTOLEVEL 0
+#define FEATURE_AUTOLEVEL 1
 #define FEATURE_SOFTWARE_LEVELING 0
 #define Z_PROBE_X1 20
 #define Z_PROBE_Y1 20
@@ -603,7 +603,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_MEMORY_POSITION 1
 #define FEATURE_CHECKSUM_FORCED 0
 #define FEATURE_FAN_CONTROL 1
-#define FEATURE_FAN2_CONTROL 0
+#define FEATURE_FAN2_CONTROL 1
 #define FEATURE_CONTROLLER 1
 #define ADC_KEYPAD_PIN -1
 #define LANGUAGE_EN_ACTIVE 1
