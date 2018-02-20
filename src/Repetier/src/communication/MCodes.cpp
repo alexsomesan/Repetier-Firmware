@@ -1186,7 +1186,7 @@ void MCode_907(GCode* com) {
 void MCode_908(GCode* com) {
     if (com->hasP() && com->hasS() && com->P >= 0 && com->P < NUM_MOTORS) {
         if (Motion1::drivers[com->P]->implementSetMaxCurrent()) {
-            Motion1::drivers[com->P]->setMaxCurrent((int)com->S);
+            Motion1::drivers[com->P]->setMotorCurrent((int)com->S);
         } else {
             Com::printWarningFLN(PSTR("This driver does not support setting current by software!"));
         }
