@@ -132,6 +132,8 @@ public:
         // driver->stealthChop(stealthchop);         // Enable extremely quiet stepping
         // driver->sg_stall_value(sgt);              // StallGuard sensitivity
     }
+    inline bool implementSetMaxCurrent() { return true; }
+
     inline void setMicrosteps(uint16_t microsteps) {
         while (!(driver->stst()))
             ;
@@ -141,6 +143,7 @@ public:
         while (!(driver->stst()))
             ;
         driver->rms_current(current);
+        Com::printFLN(PSTR("Updated current!"));
     }
 
 private:
