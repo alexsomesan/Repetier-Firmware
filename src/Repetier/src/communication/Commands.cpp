@@ -605,6 +605,16 @@ void motorCurrentControlInit() {                     //Initialize MCP4728 Motor 
 }
 #endif
 
+#if STEPPER_CURRENT_CONTROL == CURRENT_CONTROL_TMC2130
+void motorCurrentControlInit() {
+    const uint16_t motor_current[] = MOTOR_CURRENT;
+    XMotor.setMotorCurrent(motor_current[0]);
+    YMotor.setMotorCurrent(motor_current[1]);
+    ZMotor.setMotorCurrent(motor_current[2]);
+    E1Motor.setMotorCurrent(motor_current[3]);
+}
+#endif
+
 #if defined(X_MS1_PIN) && X_MS1_PIN > -1
 void microstepMS(uint8_t driver, int8_t ms1, int8_t ms2) {
     if (ms1 > -1)
@@ -724,8 +734,8 @@ void microstepReadings() {
 #endif
 
 void microstepInit() {
-#if defined(X_MS1_PIN) && X_MS1_PIN > -1
     const uint8_t microstep_modes[] = MICROSTEP_MODES;
+#if defined(X_MS1_PIN) && X_MS1_PIN > -1
 #if X_MS1_PIN > -1
     SET_OUTPUT(X_MS1_PIN);
 #endif
@@ -759,6 +769,10 @@ void microstepInit() {
     for (int i = 0; i <= 4; i++)
         microstepMode(i, microstep_modes[i]);
 #endif
+    XMotor.setMicrosteps(microstep_modes[0]);
+    YMotor.setMicrosteps(microstep_modes[1]);
+    ZMotor.setMicrosteps(microstep_modes[2]);
+    E1Motor.setMicrosteps(microstep_modes[3]);
 }
 
 /**

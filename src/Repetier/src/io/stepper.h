@@ -17,31 +17,42 @@
 */
 
 #undef STEPPER_SIMPLE
+#undef STEPPER_TMC2130
 
 #if IO_TARGET == 4 // declare variable
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop) \
     extern SimpleStepperDriver<stepPin, dirPin, enablePin> name;
 
-#elif IO_TARGET == 6 // define variables
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin) \
+    extern TMC2130StepperDriver<stepPin, dirPin, enablePin> name;
+
+#elif IO_TARGET == 6
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop) \
     SimpleStepperDriver<stepPin, dirPin, enablePin> name(&minEndstop, &maxEndstop);
 
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin) \
+    TMC2130StepperDriver<stepPin, dirPin, enablePin> name(&minEndstop, &maxEndstop, csPin);
+
 #elif IO_TARGET == 1 // Init drivers at startup
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop)
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin)
 
 #elif IO_TARGET == 8 // call eepromHandle if required
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop)
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin)
 
 #elif IO_TARGET == 9 // call updatedDerived to activate new settings
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop)
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin)
 
 #else
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop)
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin)
 
 #endif

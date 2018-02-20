@@ -1166,20 +1166,20 @@ void MCode_900(GCode* com) {
 void MCode_907(GCode* com) {
 #if STEPPER_CURRENT_CONTROL != CURRENT_CONTROL_MANUAL
     // If "S" is specified, use that as initial default value, then update each axis w/ specific values as found later.
-    if (com->hasS()) {
-        for (int i = 0; i < 10; i++) {
-            setMotorCurrentPercent(i, com->S);
-        }
-    }
+    // if (com->hasS()) {
+    //     for (int i = 0; i < 10; i++) {
+    //         setMotorCurrentPercent(i, com->S);
+    //     }
+    // }
 
     if (com->hasX())
-        setMotorCurrentPercent(0, (float)com->X);
+        XMotor.setMotorCurrentPercent((unsigned int)com->X);
     if (com->hasY())
-        setMotorCurrentPercent(1, (float)com->Y);
+        YMotor.setMotorCurrentPercent((unsigned int)com->Y);
     if (com->hasZ())
-        setMotorCurrentPercent(2, (float)com->Z);
+        ZMotor.setMotorCurrentPercent((unsigned int)com->Z);
     if (com->hasE())
-        setMotorCurrentPercent(3, (float)com->E);
+        E1Motor.setMotorCurrentPercent((unsigned int)com->E);
 #endif
 }
 
