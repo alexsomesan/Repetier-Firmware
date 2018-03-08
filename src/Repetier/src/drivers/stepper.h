@@ -38,6 +38,9 @@ public:
     // or otherwise prepare for endstop detection.
     virtual void beforeHoming() {}
     virtual void afterHoming() {}
+    inline void status() {
+        Com::printFLN(PSTR("not implemented"));
+    }
     EndstopDriver* minEndstop;
     EndstopDriver* maxEndstop;
     bool direction;
@@ -144,6 +147,9 @@ public:
             ;
         driver->rms_current(current);
         Com::printFLN(PSTR("Updated current!"));
+    }
+    inline void status() {
+        Com::printFLN(PSTR("Hello status!\nVersion "), driver->version());
     }
 
 private:

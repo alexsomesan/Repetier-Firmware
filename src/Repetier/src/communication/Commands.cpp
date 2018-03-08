@@ -1326,6 +1326,9 @@ void Commands::processMCode(GCode* com) {
     case 890:
         MCode_890(com);
         break;
+    case 990:
+        MCode_990(com);
+        break;
     case 998:
         MCode_998(com);
         break;
