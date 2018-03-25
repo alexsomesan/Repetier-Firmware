@@ -37,12 +37,12 @@
 */
 
 // The follwing variables are required early to decide on the right modules.
-#define NUM_EXTRUDER 2
-#define MOTHERBOARD 405 // 405
-#define EEPROM_MODE 1
+#define NUM_EXTRUDER 1
+#define MOTHERBOARD 402 // 405
+#define EEPROM_MODE 2
 #define RFSERIAL Serial
 #define WAITING_IDENTIFIER "wait"
-#define JSON_OUTPUT 1
+#define JSON_OUTPUT 0
 #define FEATURE_SERVO 1
 #define FEATURE_WATCHDOG 0
 #define FEATURE_Z_PROBE 0
@@ -61,7 +61,7 @@
 #define TEMPERATURE_CONTROL_RANGE 20 // Start with controlling if temperature is +/- this value to target temperature
 
 // 0 = Cartesian, 1 = CoreXYZ, 2 = delta
-#define PRINTER_TYPE 0
+#define PRINTER_TYPE 1
 /* Ratios for core xyz. First index denotes motor and second axis.
 For each motor you can set the ratio of x,y,z position that adds
 to the position. 0 = no contribution. */
@@ -104,16 +104,28 @@ to the position. 0 = no contribution. */
 // Define ZProbe by referencing a endstop defined
 CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
+// #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
+// #define MOTOR_CURRENT   { 1000, 1000, 1000, 800, 0, 0 }
+
+// /** Trinamic Settings **/
+// #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
+// #define MOTOR_CURRENT \
+//     { 1000, 1000, 1000, 800, 0, 0 }
+// #define ORIG_X_CS_PIN 29
+// #define ORIG_Y_CS_PIN 30
+// #define ORIG_Z_CS_PIN 28
+// #define ORIG_E0_CS_PIN 31
+
 /** Axes are homed in order of priority (0..10) if homing direction is not 0. */
-#define X_HOME_PRIORITY 0
-#define Y_HOME_PRIORITY 1
-#define Z_HOME_PRIORITY 2
+#define X_HOME_PRIORITY 1
+#define Y_HOME_PRIORITY 2
+#define Z_HOME_PRIORITY 0
 
 // All fans in this list list become controllable with M106/M107
 // by selecteing the fan number with P0..P<NUM_FANS-1>
-#define NUM_FANS 1
+#define NUM_FANS 2
 #define FAN_LIST \
-    { &Fan1PWM }
+    { &Fan1PWM, &Fan2PWM }
 
 #define NUM_HEATED_BEDS 1
 #define HEATED_BED_LIST \
@@ -123,16 +135,16 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define HEATED_CHAMBER_LIST \
     {}
 
-#define NUM_TOOLS 2
+#define NUM_TOOLS 1
 #define TOOLS \
-    { &ToolExtruder1, &ToolExtruder2 }
+    { &ToolExtruder1 }
 
 // Heaters enumerate all heaters, so we can loop over them
 // or call commands on a specific heater number.
 // Suggested order: extruder heaters, heated beds, heated chambers, additional heaters
-#define NUM_HEATERS 3
+#define NUM_HEATERS 2
 #define HEATERS \
-    { &HeaterExtruder1, &HeaterExtruder2, &HeatedBed1 }
+    { &HeaterExtruder1, &HeatedBed1 }
 
 // Array to call motor related commands like microstepping/current if supported.
 // Id's start at 0 and depend on position in this array.
@@ -141,14 +153,14 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
     { &XMotor, &YMotor, &ZMotor }
 
 
-#define X_HOME_DIR -1
+#define X_HOME_DIR 1
 #define Y_HOME_DIR 1
-#define Z_HOME_DIR -1
-#define X_MAX_LENGTH 240
-#define Y_MAX_LENGTH 245
-#define Z_MAX_LENGTH 225
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define Z_HOME_DIR 1
+#define X_MAX_LENGTH 360
+#define Y_MAX_LENGTH 315
+#define Z_MAX_LENGTH 253.2
+#define X_MIN_POS -45
+#define Y_MIN_POS -84
 #define Z_MIN_POS 0
 // Park position used when pausing from firmware side
 #if PRINTER_TYPE == 2
@@ -166,9 +178,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1100
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1100
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
-#define XAXIS_STEPS_PER_MM 610
-#define YAXIS_STEPS_PER_MM 610
-#define ZAXIS_STEPS_PER_MM 6400
+#define XAXIS_STEPS_PER_MM 322.44
+#define YAXIS_STEPS_PER_MM 322.44
+#define ZAXIS_STEPS_PER_MM 6425.3798
 
 
 // ################## EDIT THESE SETTINGS MANUALLY ################
@@ -187,12 +199,10 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define FAN_THERMO_THERMISTOR_TYPE 1
 #undef Y_MIN_PIN
 #define Y_MIN_PIN -1
-#undef X_MAX_PIN
-#define X_MAX_PIN -1
-#undef Y_MAX_PIN
-#define Y_MAX_PIN ORIG_Y_MIN_PIN
-#undef Z_MAX_PIN
-#define Z_MAX_PIN -1
+#undef X_MIN_PIN
+#define X_MIN_PIN -1
+#undef Z_MIN_PIN
+#define Z_MIN_PIN -1
 
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in. Requires more ram, has only 63 byte input buffer.
 // Uncomment the following line if you are using Arduino compatible firmware made for Arduino version earlier then 1.0
@@ -359,10 +369,10 @@ It also can add a delay to wait for spindle to run on full speed.
 #define MAX_INACTIVE_TIME 1200L
 #define MAX_FEEDRATE_X 300
 #define MAX_FEEDRATE_Y 300
-#define MAX_FEEDRATE_Z 20
+#define MAX_FEEDRATE_Z 10
 #define HOMING_FEEDRATE_X 50
 #define HOMING_FEEDRATE_Y 50
-#define HOMING_FEEDRATE_Z 5
+#define HOMING_FEEDRATE_Z 2
 #define ZHOME_PRE_RAISE 0
 #define ZHOME_PRE_RAISE_DISTANCE 10
 #define RAISE_Z_ON_TOOLCHANGE 0
@@ -429,7 +439,7 @@ M340 P<servoId> S<pulseInUS>   / ServoID = 0..3  pulseInUs = 500..2500
 Servos are controlled by a pulse width normally between 500 and 2500 with 1500ms in center position. 0 turns servo off.
 WARNING: Servos can draw a considerable amount of current. Make sure your system can handle this or you may risk your hardware!
 */
-#define SERVO0_PIN 5
+#define SERVO0_PIN 11
 #define SERVO1_PIN -1
 #define SERVO2_PIN -1
 #define SERVO3_PIN -1
@@ -474,7 +484,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_Y2 45
 #define Z_PROBE_X3 137
 #define Z_PROBE_Y3 210
-#define BED_LEVELING_METHOD 2
+#define BED_LEVELING_METHOD 0
 #define BED_CORRECTION_METHOD 0
 #define BED_LEVELING_GRID_SIZE 5
 #define BED_LEVELING_REPETITIONS 5
@@ -505,23 +515,23 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_MEMORY_POSITION 1
 #define FEATURE_CHECKSUM_FORCED 0
 #define FEATURE_FAN_CONTROL 1
-#define FEATURE_FAN2_CONTROL 0
+#define FEATURE_FAN2_CONTROL 1
 #define FEATURE_CONTROLLER 0 // 11
 #define ADC_KEYPAD_PIN -1
 #define LANGUAGE_EN_ACTIVE 1
 #define LANGUAGE_DE_ACTIVE 1
-#define LANGUAGE_NL_ACTIVE 1
-#define LANGUAGE_PT_ACTIVE 1
-#define LANGUAGE_IT_ACTIVE 1
-#define LANGUAGE_ES_ACTIVE 1
-#define LANGUAGE_FI_ACTIVE 1
-#define LANGUAGE_SE_ACTIVE 1
-#define LANGUAGE_FR_ACTIVE 1
-#define LANGUAGE_CZ_ACTIVE 1
-#define LANGUAGE_PL_ACTIVE 1
-#define LANGUAGE_TR_ACTIVE 1
-#define UI_PRINTER_NAME "FELIX Pro 1"
-#define UI_PRINTER_COMPANY "FELIXprinters"
+#define LANGUAGE_NL_ACTIVE 0
+#define LANGUAGE_PT_ACTIVE 0
+#define LANGUAGE_IT_ACTIVE 0
+#define LANGUAGE_ES_ACTIVE 0
+#define LANGUAGE_FI_ACTIVE 0
+#define LANGUAGE_SE_ACTIVE 0
+#define LANGUAGE_FR_ACTIVE 0
+#define LANGUAGE_CZ_ACTIVE 0
+#define LANGUAGE_PL_ACTIVE 0
+#define LANGUAGE_TR_ACTIVE 0
+#define UI_PRINTER_NAME "HEVO"
+#define UI_PRINTER_COMPANY "custom"
 #define UI_PAGES_DURATION 4000
 #define UI_SPEEDDEPENDENT_POSITIONING 0
 #define UI_DISABLE_AUTO_PAGESWITCH 1
@@ -554,9 +564,9 @@ Values must be in range 1..255
 #define UI_SET_EXTRUDER_FEEDRATE 5
 #define UI_SET_EXTRUDER_RETRACT_DISTANCE 3
 
-#define NUM_MOTOR_DRIVERS 2
-#define MOTOR_DRIVER_1(var) StepperDriver<51, 53, 49, 0, 0> var(3382, 0.2)
-#define MOTOR_DRIVER_2(var) StepperDriver<39, 13, 40, 0, 0> var(3382, 0.2)
+#define NUM_MOTOR_DRIVERS 0
+// #define MOTOR_DRIVER_1(var) StepperDriver<51, 53, 49, 0, 0> var(3382, 0.2)
+// #define MOTOR_DRIVER_2(var) StepperDriver<39, 13, 40, 0, 0> var(3382, 0.2)
 
 #define ALTERNATIVE_JERK
 #define REDUCE_ON_SMALL_SEGMENTS
