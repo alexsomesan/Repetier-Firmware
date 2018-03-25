@@ -11,7 +11,9 @@ public:
     inline EndstopDriver* getMinEndstop() { return minEndstop; }
     inline EndstopDriver* getMaxEndstop() { return maxEndstop; }
     /// Allows initialization of driver e.g. current, microsteps
-    virtual void init() {}
+    virtual void init() {
+        Com::printFLN(PSTR("StepperDriverBase initialization"));
+    }
     /// Executes the step if endstop is not triggered. Return tru eif endstop is triggered
     virtual bool stepCond() = 0;
     /// Always executes the step
@@ -38,7 +40,7 @@ public:
     // or otherwise prepare for endstop detection.
     virtual void beforeHoming() {}
     virtual void afterHoming() {}
-    inline void status() {
+    virtual void status() {
         Com::printFLN(PSTR("not implemented"));
     }
     EndstopDriver* minEndstop;
@@ -122,12 +124,16 @@ public:
     inline void disable() final {
         enableCls::off();
     }
-    inline void init() {
+    inline void init() final {
+        Com::printFLN(PSTR("TMC2130 initialization"));
         while (!(driver->stst()))
             ;                         // Wait for motor stand-still
         driver->begin();              // Initiate pins and registeries
         driver->I_scale_analog(true); // Set current reference source
-        driver->interpolate(true);    // Set internal microstep interpolation
+        driver->interpolate(false);    // Set internal microstep interpolation
+        driver->internal_Rsense(false);
+        driver->rms_current(500);
+        driver->microsteps(16);
         // driver->pwm_ampl(tmc_pwm_ampl);           // Chopper PWM amplitude
         // driver->pwm_grad(tmc_pwm_grad);           // Velocity gradient for chopper PWM amplitude
         // driver->pwm_autoscale(tmc_pwm_autoscale); // Chopper PWM autoscaling
@@ -137,19 +143,23 @@ public:
     }
     inline bool implementSetMaxCurrent() { return true; }
 
-    inline void setMicrosteps(uint16_t microsteps) {
+    inline void setMicrosteps(uint16_t microsteps) final {
         while (!(driver->stst()))
             ;
         driver->microsteps(microsteps);
     }
-    inline void setMotorCurrent(uint16_t current) {
+    inline void setMotorCurrent(uint16_t current) final {
         while (!(driver->stst()))
             ;
         driver->rms_current(current);
-        Com::printFLN(PSTR("Updated current!"));
     }
-    inline void status() {
-        Com::printFLN(PSTR("Hello status!\nVersion "), driver->version());
+    inline void status() final {
+        Com::printFLN(PSTR("TMC2130 driver version "), driver->version());
+        Com::printFLN(PSTR("\tRMS current "), driver->rms_current());
+        Com::printFLN(PSTR("\tMicrosteps "), driver->microsteps());
+        Com::printFLN(PSTR("\tStallguard value "),driver->sg_result());
+        Com::printFLN(PSTR("\tOver temperature "), driver->ot());
+        Com::printFLN(PSTR("\tOver temperature prewarn "), driver->otpw());
     }
 
 private:

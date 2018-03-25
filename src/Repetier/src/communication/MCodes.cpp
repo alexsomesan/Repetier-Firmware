@@ -1207,14 +1207,15 @@ void MCode_910(GCode* com) {
 
 void MCode_990(GCode* com) {
     int a = 0;
-    int b = NUM_AXES;
-    Com::printInfoFLN("Trinamic driver status");
-    if (com->hasP() && com->P >= 0 && com->P < NUM_AXES) {
-        a = b = com->P;
+    int b = NUM_MOTORS;
+    if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
+        a = com->P;
+        b = a+1;
     }
     for (int i = a; i < b; i++) {
-        Com::printFLN(PSTR("\tdriver "), i);
-        (TMC2130StepperDriver*)(Motion1::motors[i])->status();
+        Com::printF(PSTR("\tStepper Driver "), i);
+        Com::printFLN(PSTR(" status:"));
+        Motion1::motors[i]->status();
     }
 }
 
