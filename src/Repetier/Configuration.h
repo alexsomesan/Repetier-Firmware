@@ -104,17 +104,16 @@ to the position. 0 = no contribution. */
 // Define ZProbe by referencing a endstop defined
 CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
-// #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
-// #define MOTOR_CURRENT   { 1000, 1000, 1000, 800, 0, 0 }
+#define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
+#define MOTOR_CURRENT   { 1000, 1000, 1000, 800, 0, 0 }
 
 // /** Trinamic Settings **/
-// #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
-// #define MOTOR_CURRENT \
-//     { 1000, 1000, 1000, 800, 0, 0 }
-// #define ORIG_X_CS_PIN 29
-// #define ORIG_Y_CS_PIN 30
-// #define ORIG_Z_CS_PIN 28
-// #define ORIG_E0_CS_PIN 31
+#define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
+#define MOTOR_CURRENT { 1000, 1000, 1000, 800, 0, 0 }
+#define ORIG_X_CS_PIN 29
+#define ORIG_Y_CS_PIN 30
+#define ORIG_Z_CS_PIN 28
+#define ORIG_E0_CS_PIN 31
 
 /** Axes are homed in order of priority (0..10) if homing direction is not 0. */
 #define X_HOME_PRIORITY 1
@@ -148,9 +147,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
 // Array to call motor related commands like microstepping/current if supported.
 // Id's start at 0 and depend on position in this array.
-#define NUM_MOTORS 3
+#define NUM_MOTORS 4
 #define MOTORS \
-    { &XMotor, &YMotor, &ZMotor }
+    { &XMotor, &YMotor, &ZMotor, &E1Motor }
 
 
 #define X_HOME_DIR 1
