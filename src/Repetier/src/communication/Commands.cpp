@@ -1124,6 +1124,9 @@ void Commands::processMCode(GCode* com) {
     case 120: // M120 Test beeper function
         MCode_120(com);
         break;
+    case 122:
+        MCode_122(com);
+        break;
     case 163: // M163 S<extruderNum> P<weight>  - Set weight for this mixing extruder drive
         MCode_163(com);
         break;
@@ -1325,9 +1328,6 @@ void Commands::processMCode(GCode* com) {
 #endif
     case 890:
         MCode_890(com);
-        break;
-    case 990:
-        MCode_990(com);
         break;
     case 998:
         MCode_998(com);

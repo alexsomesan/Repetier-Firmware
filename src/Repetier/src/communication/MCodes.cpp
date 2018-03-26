@@ -482,6 +482,20 @@ void MCode_120(GCode* com) {
 #endif
 }
 
+void MCode_122(GCode* com) {
+    int a = 0;
+    int b = NUM_MOTORS;
+    if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
+        a = com->P;
+        b = a+1;
+    }
+    for (int i = a; i < b; i++) {
+        Com::printF(PSTR("\tStepper Driver "), i);
+        Com::printFLN(PSTR(" status:"));
+        Motion1::motors[i]->status();
+    }
+}
+
 void MCode_140(GCode* com) {
 #if NUM_HEATED_BEDS > 0
     {
@@ -1203,20 +1217,6 @@ void MCode_910(GCode* com) {
 #if STEPPER_CURRENT_CONTROL == CURRENT_CONTROL_MCP4728
     dacCommitEeprom();
 #endif
-}
-
-void MCode_990(GCode* com) {
-    int a = 0;
-    int b = NUM_MOTORS;
-    if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
-        a = com->P;
-        b = a+1;
-    }
-    for (int i = a; i < b; i++) {
-        Com::printF(PSTR("\tStepper Driver "), i);
-        Com::printFLN(PSTR(" status:"));
-        Motion1::motors[i]->status();
-    }
 }
 
 void MCode_998(GCode* com) {
