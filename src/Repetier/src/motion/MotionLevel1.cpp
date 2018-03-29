@@ -80,6 +80,9 @@ void Motion1::init() {
     axesTriggered = 0;
     motorTriggered = 0;
     FOR_ALL_AXES(i) {
+        if(!drivers[i]->init()) {
+            Printer::kill(false);
+        }
         axisBits[i] = (uint8_t)1 << i;
         allAxes |= axisBits[i];
         currentPosition[i] = 0;

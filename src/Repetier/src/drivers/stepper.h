@@ -11,9 +11,7 @@ public:
     inline EndstopDriver* getMinEndstop() { return minEndstop; }
     inline EndstopDriver* getMaxEndstop() { return maxEndstop; }
     /// Allows initialization of driver e.g. current, microsteps
-    virtual void init() {
-        Com::printFLN(PSTR("StepperDriverBase initialization"));
-    }
+    virtual bool init() { return true; }
     /// Executes the step if endstop is not triggered. Return tru eif endstop is triggered
     virtual bool stepCond() = 0;
     /// Always executes the step
@@ -124,22 +122,25 @@ public:
     inline void disable() final {
         enableCls::off();
     }
-    inline void init() final {
+    inline bool init() final {
         Com::printFLN(PSTR("TMC2130 initialization"));
+        driver->test_connection();
+        if(driver->test_connection() != 0) {
+            return false;
+        }
         while (!(driver->stst()))
             ;                         // Wait for motor stand-still
         driver->begin();              // Initiate pins and registeries
         driver->I_scale_analog(true); // Set current reference source
         driver->interpolate(false);    // Set internal microstep interpolation
         driver->internal_Rsense(false);
-        driver->rms_current(500);
-        driver->microsteps(16);
         // driver->pwm_ampl(tmc_pwm_ampl);           // Chopper PWM amplitude
         // driver->pwm_grad(tmc_pwm_grad);           // Velocity gradient for chopper PWM amplitude
         // driver->pwm_autoscale(tmc_pwm_autoscale); // Chopper PWM autoscaling
         // driver->pwm_freq(tmc_pwm_freq);           // Chopper PWM frequency selection
         // driver->stealthChop(stealthchop);         // Enable extremely quiet stepping
         // driver->sg_stall_value(sgt);              // StallGuard sensitivity
+        return true;
     }
     inline bool implementSetMaxCurrent() { return true; }
 
@@ -155,6 +156,7 @@ public:
     }
     inline void status() final {
         Com::printFLN(PSTR("TMC2130 driver version "), driver->version());
+        Com::printFLN(PSTR("\tConnection test "), driver->test_connection());
         Com::printFLN(PSTR("\tRMS current "), driver->rms_current());
         Com::printFLN(PSTR("\tMicrosteps "), driver->microsteps());
         Com::printFLN(PSTR("\tStallguard value "),driver->sg_result());
@@ -162,6 +164,32 @@ public:
         Com::printFLN(PSTR("\tOver temperature prewarn "), driver->otpw());
     }
 
+    inline void beforeHoming() {
+        backup.GCONF = driver->GCONF();
+        backup.CHOPCONF = driver->CHOPCONF();
+        backup.COOLCONF = driver->COOLCONF();
+        backup.PWMCONF = driver->PWMCONF();
+        backup.TCOOLTHRS = driver->TCOOLTHRS();
+        backup.TPWMTHRS = driver->TPWMTHRS();
+    }
+
+    inline void afterHoming() {
+        driver->GCONF(backup.GCONF);
+        driver->CHOPCONF(backup.CHOPCONF);
+        driver->COOLCONF(backup.COOLCONF);
+        driver->PWMCONF(backup.PWMCONF);
+        driver->TCOOLTHRS(backup.TCOOLTHRS);
+        driver->TPWMTHRS(backup.TPWMTHRS);
+    }
+
 private:
     TMC2130Stepper* driver;
+    struct {
+        uint32_t GCONF;
+        uint32_t CHOPCONF;
+        uint32_t COOLCONF;
+        uint32_t PWMCONF;
+        uint32_t TCOOLTHRS;
+        uint32_t TPWMTHRS;
+    } backup;
 };
