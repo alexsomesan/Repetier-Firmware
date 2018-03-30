@@ -125,21 +125,16 @@ public:
     inline bool init() final {
         Com::printFLN(PSTR("TMC2130 initialization"));
         driver->test_connection();
-        if(driver->test_connection() != 0) {
+        if (driver->test_connection() != 0) {
+            Com::printFLN(PSTR("SPI error"));
             return false;
         }
         while (!(driver->stst()))
             ;                         // Wait for motor stand-still
         driver->begin();              // Initiate pins and registeries
         driver->I_scale_analog(true); // Set current reference source
-        driver->interpolate(false);    // Set internal microstep interpolation
+        driver->interpolate(false);   // Set internal microstep interpolation
         driver->internal_Rsense(false);
-        // driver->pwm_ampl(tmc_pwm_ampl);           // Chopper PWM amplitude
-        // driver->pwm_grad(tmc_pwm_grad);           // Velocity gradient for chopper PWM amplitude
-        // driver->pwm_autoscale(tmc_pwm_autoscale); // Chopper PWM autoscaling
-        // driver->pwm_freq(tmc_pwm_freq);           // Chopper PWM frequency selection
-        // driver->stealthChop(stealthchop);         // Enable extremely quiet stepping
-        // driver->sg_stall_value(sgt);              // StallGuard sensitivity
         return true;
     }
     inline bool implementSetMaxCurrent() { return true; }
@@ -159,7 +154,7 @@ public:
         Com::printFLN(PSTR("\tConnection test "), driver->test_connection());
         Com::printFLN(PSTR("\tRMS current "), driver->rms_current());
         Com::printFLN(PSTR("\tMicrosteps "), driver->microsteps());
-        Com::printFLN(PSTR("\tStallguard value "),driver->sg_result());
+        Com::printFLN(PSTR("\tStallguard value "), driver->sg_result());
         Com::printFLN(PSTR("\tOver temperature "), driver->ot());
         Com::printFLN(PSTR("\tOver temperature prewarn "), driver->otpw());
     }
