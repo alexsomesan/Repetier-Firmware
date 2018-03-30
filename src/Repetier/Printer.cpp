@@ -498,45 +498,6 @@ void Printer::setup() {
 #if defined(MB_SETUP)
     MB_SETUP;
 #endif
-<<<<<<< HEAD
-=======
-#if UI_DISPLAY_TYPE != NO_DISPLAY
-    Com::selectLanguage(0); // just make sure we have a language in case someone uses it early
-#endif
-    //HAL::delayMilliseconds(500);  // add a delay at startup to give hardware time for initalization
-#if defined(EEPROM_AVAILABLE) && defined(EEPROM_SPI_ALLIGATOR) && EEPROM_AVAILABLE == EEPROM_SPI_ALLIGATOR
-    HAL::spiBegin();
-#endif
-    //    HAL::hwSetup();
-    EVENT_INITIALIZE_EARLY
-#ifdef ANALYZER
-// Channel->pin assignments
-#if ANALYZER_CH0 >= 0
-    SET_OUTPUT(ANALYZER_CH0);
-#endif
-#if ANALYZER_CH1 >= 0
-    SET_OUTPUT(ANALYZER_CH1);
-#endif
-#if ANALYZER_CH2 >= 0
-    SET_OUTPUT(ANALYZER_CH2);
-#endif
-#if ANALYZER_CH3 >= 0
-    SET_OUTPUT(ANALYZER_CH3);
-#endif
-#if ANALYZER_CH4 >= 0
-    SET_OUTPUT(ANALYZER_CH4);
-#endif
-#if ANALYZER_CH5 >= 0
-    SET_OUTPUT(ANALYZER_CH5);
-#endif
-#if ANALYZER_CH6 >= 0
-    SET_OUTPUT(ANALYZER_CH6);
-#endif
-#if ANALYZER_CH7 >= 0
-    SET_OUTPUT(ANALYZER_CH7);
-#endif
-#endif
->>>>>>> Revert debug initialization
 
     EEPROM::initBaudrate();
     HAL::serialSetBaudrate(baudrate);
