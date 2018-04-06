@@ -80,9 +80,6 @@ void Motion1::init() {
     axesTriggered = 0;
     motorTriggered = 0;
     FOR_ALL_AXES(i) {
-        if(!drivers[i]->init()) {
-            Printer::kill(false);
-        }
         axisBits[i] = (uint8_t)1 << i;
         allAxes |= axisBits[i];
         currentPosition[i] = 0;
@@ -1064,7 +1061,7 @@ void Motion1Buffer::unblock() {
 void Motion1::moveToParkPosition() {
     setTmpPositionXYZ(parkPosition[X_AXIS], parkPosition[Y_AXIS], IGNORE_COORDINATE);
     moveByOfficial(tmpPosition, XY_SPEED);
-    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]) );
+    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]));
     moveByOfficial(tmpPosition, Z_SPEED);
 }
 

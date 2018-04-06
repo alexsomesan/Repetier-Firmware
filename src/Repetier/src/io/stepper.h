@@ -38,7 +38,8 @@
 #elif IO_TARGET == 1 // Init drivers at startup
 
 #define STEPPER_SIMPLE(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop)
-#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin)
+#define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin) \
+    name.init();
 
 #elif IO_TARGET == 8 // call eepromHandle if required
 
