@@ -104,12 +104,15 @@ to the position. 0 = no contribution. */
 // Define ZProbe by referencing a endstop defined
 CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
-#define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
-#define MOTOR_CURRENT   { 1000, 1000, 1000, 800, 0, 0 }
+#define MICROSTEP_MODES \
+    { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
+#define MOTOR_CURRENT \
+    { 1000, 1000, 1000, 800, 0, 0 }
 
 // /** Trinamic Settings **/
 #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
-#define MOTOR_CURRENT { 1000, 1000, 1000, 800, 0, 0 }
+#define MOTOR_CURRENT \
+    { 1000, 1000, 1000, 800, 0, 0 }
 #define ORIG_X_CS_PIN 29
 #define ORIG_Y_CS_PIN 30
 #define ORIG_Z_CS_PIN 28
@@ -151,7 +154,6 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define MOTORS \
     { &XMotor, &YMotor, &ZMotor, &E1Motor }
 
-
 #define X_HOME_DIR 1
 #define Y_HOME_DIR 1
 #define Z_HOME_DIR 1
@@ -165,7 +167,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #if PRINTER_TYPE == 2
 #define PARK_POSITION_X (0)
 #define PARK_POSITION_Y (70)
-#else 
+#else
 #define PARK_POSITION_X (X_MIN_POS)
 #define PARK_POSITION_Y (Y_MIN_POS + Y_MAX_LENGTH)
 #endif
@@ -180,7 +182,6 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define XAXIS_STEPS_PER_MM 322.44
 #define YAXIS_STEPS_PER_MM 322.44
 #define ZAXIS_STEPS_PER_MM 6425.3798
-
 
 // ################## EDIT THESE SETTINGS MANUALLY ################
 // ################ END MANUAL SETTINGS ##########################
@@ -618,6 +619,8 @@ Values must be in range 1..255
     0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, \
     0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+\
+\
 };
 
 #endif
