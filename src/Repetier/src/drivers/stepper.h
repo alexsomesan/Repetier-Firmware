@@ -91,7 +91,7 @@ class TMC2130StepperDriver : public StepperDriverBase {
 public:
     TMC2130StepperDriver(EndstopDriver* minES, EndstopDriver* maxES, uint16_t csPin)
         : StepperDriverBase(minES, maxES)
-        , driver(new TMC2130Stepper(csPin)) {}
+        , driver(TMC2130Stepper(csPin)) {}
     inline bool stepCond() final {
         if (direction) {
             if (!maxEndstop->update()) {
@@ -123,62 +123,63 @@ public:
         enableCls::off();
     }
     inline bool init() final {
-        Com::printFLN(PSTR("TMC2130 initialization"));
-        driver->test_connection();
-        if (driver->test_connection() != 0) {
+        Com::printF(PSTR("TMC2130 initialization..."));
+        driver.begin(); // Initiate pins and registeries
+        driver.test_connection();
+        if (driver.test_connection() != 0) {
             Com::printFLN(PSTR("SPI error"));
             return false;
         }
-        while (!(driver->stst()))
-            ;                         // Wait for motor stand-still
-        driver->begin();              // Initiate pins and registeries
-        driver->I_scale_analog(true); // Set current reference source
-        driver->interpolate(false);   // Set internal microstep interpolation
-        driver->internal_Rsense(false);
+        Com::printFLN(PSTR("chip version "), driver.version());
+        while (!(driver.stst()))
+            ;                        // Wait for motor stand-still
+        driver.I_scale_analog(true); // Set current reference source
+        driver.interpolate(false);   // Set internal microstep interpolation
+        driver.internal_Rsense(false);
         return true;
     }
     inline bool implementSetMaxCurrent() { return true; }
 
     inline void setMicrosteps(uint16_t microsteps) final {
-        while (!(driver->stst()))
+        while (!(driver.stst()))
             ;
-        driver->microsteps(microsteps);
+        driver.microsteps(microsteps);
     }
     inline void setMotorCurrent(uint16_t current) final {
-        while (!(driver->stst()))
+        while (!(driver.stst()))
             ;
-        driver->rms_current(current);
+        driver.rms_current(current);
     }
     inline void status() final {
-        Com::printFLN(PSTR("TMC2130 driver version "), driver->version());
-        Com::printFLN(PSTR("\tConnection test "), driver->test_connection());
-        Com::printFLN(PSTR("\tRMS current "), driver->rms_current());
-        Com::printFLN(PSTR("\tMicrosteps "), driver->microsteps());
-        Com::printFLN(PSTR("\tStallguard value "), driver->sg_result());
-        Com::printFLN(PSTR("\tOver temperature "), driver->ot());
-        Com::printFLN(PSTR("\tOver temperature prewarn "), driver->otpw());
+        Com::printFLN(PSTR("TMC2130 driver version "), driver.version());
+        Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
+        Com::printFLN(PSTR("\tRMS current "), driver.rms_current());
+        Com::printFLN(PSTR("\tMicrosteps "), driver.microsteps());
+        Com::printFLN(PSTR("\tStallguard value "), driver.sg_result());
+        Com::printFLN(PSTR("\tOver temperature "), driver.ot());
+        Com::printFLN(PSTR("\tOver temperature prewarn "), driver.otpw());
     }
 
     inline void beforeHoming() {
-        backup.GCONF = driver->GCONF();
-        backup.CHOPCONF = driver->CHOPCONF();
-        backup.COOLCONF = driver->COOLCONF();
-        backup.PWMCONF = driver->PWMCONF();
-        backup.TCOOLTHRS = driver->TCOOLTHRS();
-        backup.TPWMTHRS = driver->TPWMTHRS();
+        backup.GCONF = driver.GCONF();
+        backup.CHOPCONF = driver.CHOPCONF();
+        backup.COOLCONF = driver.COOLCONF();
+        backup.PWMCONF = driver.PWMCONF();
+        backup.TCOOLTHRS = driver.TCOOLTHRS();
+        backup.TPWMTHRS = driver.TPWMTHRS();
     }
 
     inline void afterHoming() {
-        driver->GCONF(backup.GCONF);
-        driver->CHOPCONF(backup.CHOPCONF);
-        driver->COOLCONF(backup.COOLCONF);
-        driver->PWMCONF(backup.PWMCONF);
-        driver->TCOOLTHRS(backup.TCOOLTHRS);
-        driver->TPWMTHRS(backup.TPWMTHRS);
+        driver.GCONF(backup.GCONF);
+        driver.CHOPCONF(backup.CHOPCONF);
+        driver.COOLCONF(backup.COOLCONF);
+        driver.PWMCONF(backup.PWMCONF);
+        driver.TCOOLTHRS(backup.TCOOLTHRS);
+        driver.TPWMTHRS(backup.TPWMTHRS);
     }
 
 private:
-    TMC2130Stepper* driver;
+    TMC2130Stepper driver;
     struct {
         uint32_t GCONF;
         uint32_t CHOPCONF;
