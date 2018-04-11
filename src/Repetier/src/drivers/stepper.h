@@ -124,7 +124,8 @@ public:
     }
     inline bool init() final {
         Com::printF(PSTR("TMC2130 initialization..."));
-        driver.begin(); // Initiate pins and registeries
+        enableCls::off();
+        driver.begin(); // Initiate pins and registers
         driver.test_connection();
         if (driver.test_connection() != 0) {
             Com::printFLN(PSTR("SPI error"));
@@ -132,10 +133,13 @@ public:
         }
         Com::printFLN(PSTR("chip version "), driver.version());
         while (!(driver.stst()))
-            ;                        // Wait for motor stand-still
-        driver.I_scale_analog(true); // Set current reference source
-        driver.interpolate(false);   // Set internal microstep interpolation
-        driver.internal_Rsense(false);
+            ;                          // Wait for motor stand-still
+        driver.I_scale_analog(true);   // Set current reference source
+        driver.interpolate(false);     // Set internal microstep interpolation
+        driver.internal_Rsense(false); // External current sense resistor
+        driver.sgt(0);                 // Netural Stallguard threshold
+        driver.diag1_stall(true);      // DIAG1 pin as stall signal (endstop)
+        enableCls::on();
         return true;
     }
     inline bool implementSetMaxCurrent() { return true; }
