@@ -1061,7 +1061,7 @@ void Motion1Buffer::unblock() {
 void Motion1::moveToParkPosition() {
     setTmpPositionXYZ(parkPosition[X_AXIS], parkPosition[Y_AXIS], IGNORE_COORDINATE);
     moveByOfficial(tmpPosition, XY_SPEED);
-    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]));
+    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]) );
     moveByOfficial(tmpPosition, Z_SPEED);
 }
 

@@ -622,7 +622,7 @@ void Printer::setup() {
     SET_INPUT(ESP_WIFI_MODULE_COM);
     SET_INPUT(MOTOR_FAULT_PIN);
     SET_INPUT(MOTOR_FAULT_PIGGY_PIN);
-#endif              //(MOTHERBOARD == 501) || (MOTHERBOARD == 502)
+#endif //(MOTHERBOARD == 501) || (MOTHERBOARD == 502)
     EEPROM::init(); // Read settings from eeprom if wanted, run after initialization!
     HAL::analogStart();
     // Extruder::initExtruder();
@@ -758,7 +758,7 @@ void Printer::handleInterruptEvent() {
     case PRINTER_INTERRUPT_EVENT_JAM_SIGNAL4:
     case PRINTER_INTERRUPT_EVENT_JAM_SIGNAL5: {
         // TODO: Jam control
-        /* if (isJamcontrolDisabled())
+       /* if (isJamcontrolDisabled())
             break;
         fast8_t extruderIndex = event - PRINTER_INTERRUPT_EVENT_JAM_SIGNAL0;
         Extruder& ext = extruder[extruderIndex];
@@ -800,7 +800,7 @@ void Printer::showConfiguration() {
 #else
     Com::config(PSTR("Fan2:0"));
 #endif
-    Com::config(PSTR("NumFans:"), (int)NUM_FANS);
+    Com::config(PSTR("NumFans:"),(int)NUM_FANS);
     Com::config(PSTR("LCD:"), FEATURE_CONTROLLER != NO_CONTROLLER);
     Com::config(PSTR("SoftwarePowerSwitch:"), PS_ON_PIN > -1);
     Com::config(PSTR("XHomeDir:"), Motion1::homeDir[X_AXIS]);
@@ -861,7 +861,7 @@ void Printer::showConfiguration() {
         Com::config(PSTR("MaxBedTemp:"), heatedBeds[0]->getMaxTemperature());
     }
     for (fast8_t i = 0; i < NUM_TOOLS; i++) {
-        Tool* t = Tool::getTool(i);
+        Tool *t = Tool::getTool(i);
         START_EXTRUDER_CONFIG(i)
         Com::printFLN(PSTR("Jerk:"), t->getMaxYank());
         START_EXTRUDER_CONFIG(i)
@@ -1070,8 +1070,8 @@ void Printer::showJSONStatus(int type) {
     Com::printF(PSTR("]},"));
     // SEQ??
     Com::printF(PSTR("\"temps\": {"));
-    for (int i = 0; i < NUM_HEATERS; i++) {
-        HeatManager* h = heaters[i];
+    for(int i = 0; i < NUM_HEATERS; i++) {
+        HeatManager *h = heaters[i];
         if (!h->isBedHeater()) {
             continue;
         }
@@ -1089,11 +1089,11 @@ void Printer::showJSONStatus(int type) {
     for (int i = 0; i < NUM_TOOLS; i++) {
         if (!firstOccurrence)
             Com::print(',');
-        Tool* t = Tool::getTool(i);
-        HeatManager* h = t->getHeater();
+        Tool *t = Tool::getTool(i);
+        HeatManager *h = t->getHeater();
         if (h == nullptr) {
             Com::print(0);
-        } else {
+        } else { 
             Com::print(h->getCurrentTemperature());
         }
         firstOccurrence = false;
@@ -1103,11 +1103,11 @@ void Printer::showJSONStatus(int type) {
     for (int i = 0; i < NUM_TOOLS; i++) {
         if (!firstOccurrence)
             Com::print(',');
-        Tool* t = Tool::getTool(i);
-        HeatManager* h = t->getHeater();
+        Tool *t = Tool::getTool(i);
+        HeatManager *h = t->getHeater();
         if (h == nullptr) {
             Com::print(0);
-        } else {
+        } else { 
             Com::print(h->getTargetTemperature());
         }
         firstOccurrence = false;
@@ -1117,13 +1117,13 @@ void Printer::showJSONStatus(int type) {
     for (int i = 0; i < NUM_TOOLS; i++) {
         if (!firstOccurrence)
             Com::print(',');
-        Tool* t = Tool::getTool(i);
-        HeatManager* h = t->getHeater();
+        Tool *t = Tool::getTool(i);
+        HeatManager *h = t->getHeater();
         if (h == nullptr) {
             Com::print(0);
         } else { // Don't have that information, so fake it to make some sense
-            Com::print(h->getTargetTemperature() > 50 ? '2' : '1');
-            //Com::print(extruder[i].tempControl.targetTemperatureC > EXTRUDER_FAN_COOL_TEMP ? '2' : '1');
+            Com::print(h->getTargetTemperature() > 50 ? '2' : '1');            
+        //Com::print(extruder[i].tempControl.targetTemperatureC > EXTRUDER_FAN_COOL_TEMP ? '2' : '1');
         }
         firstOccurrence = false;
     }
