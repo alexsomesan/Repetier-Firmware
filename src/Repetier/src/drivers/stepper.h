@@ -85,6 +85,15 @@ public:
     }
 };
 
+#define TRINAMIC_WAIT_RESOLUTION_uS 100
+/// Wait for boolean 'condition' to become true until 'timeout' (in miliseconds)
+#define WAIT_UNTIL(condition, timeout) \
+    for(uint16_t count = 0; !condition || count < (timeout * 1000 / TRINAMIC_WAIT_RESOLUTION_uS); count++) { \
+        HAL::delayMicroseconds(TRINAMIC_WAIT_RESOLUTION_uS); \
+    }
+/// Wait for driver standstill condition until timeout (in miliseconds)
+#define TRINAMIC_WAIT_FOR_STANDSTILL(timeout) WAIT_UNTIL(driver.stst(), timeout)
+
 /// TMC2130 stepper driver with SPI configuration.
 template <class stepCls, class dirCls, class enableCls>
 class TMC2130StepperDriver : public StepperDriverBase {
@@ -132,8 +141,7 @@ public:
             return false;
         }
         Com::printFLN(PSTR("chip version "), driver.version());
-        while (!(driver.stst()))
-            ;                          // Wait for motor stand-still
+        TRINAMIC_WAIT_FOR_STANDSTILL(100) // Wait for driver stand-still
         driver.I_scale_analog(true);   // Set current reference source
         driver.interpolate(false);     // Set internal microstep interpolation
         driver.internal_Rsense(false); // External current sense resistor
@@ -145,13 +153,11 @@ public:
     inline bool implementSetMaxCurrent() { return true; }
 
     inline void setMicrosteps(uint16_t microsteps) final {
-        while (!(driver.stst()))
-            ;
+        TRINAMIC_WAIT_FOR_STANDSTILL(100) // Wait for driver stand-still
         driver.microsteps(microsteps);
     }
     inline void setMotorCurrent(uint16_t current) final {
-        while (!(driver.stst()))
-            ;
+        TRINAMIC_WAIT_FOR_STANDSTILL(100) // Wait for driver stand-still
         driver.rms_current(current);
     }
     inline void status() final {
