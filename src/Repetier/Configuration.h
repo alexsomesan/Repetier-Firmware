@@ -110,6 +110,7 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
     { 800, 800, 800, 800, 0, 0 }
 
 // /** Trinamic Settings **/
+#undef STEPPER_CURRENT_CONTROL
 #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
 #define ORIG_X_CS_PIN 29
 #define ORIG_Y_CS_PIN 30
