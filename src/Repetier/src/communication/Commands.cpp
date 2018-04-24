@@ -69,7 +69,7 @@ void Commands::checkForPeriodicalActions(bool allowNewMoves) {
         if (Printer::mode == PRINTER_MODE_LASER) {
             LaserDriver::changeIntensity(0);
         }
-#endif        
+#endif
     }
 #endif
     if (!executePeriodical)
@@ -259,7 +259,7 @@ void Commands::reportPrinterUsage() {
     Com::printF(Com::tSpacem);
     bool alloff = true;
     for (uint8_t i = 0; i < NUM_TOOLS; i++) {
-        Tool *t = Tool::getTool(i);
+        Tool* t = Tool::getTool(i);
         if (t->getHeater() != nullptr && t->getHeater()->isEnabled()) {
             alloff = false;
         }
@@ -1310,6 +1310,9 @@ void Commands::processMCode(GCode* com) {
         break;
     case 910: // M910 - Commit digipot/DAC value to external EEPROM
         MCode_910(com);
+        break;
+    case 914: // M914 - Set Trinamic Stallguard threshold
+        MCode_914(com);
         break;
 #if 0 && UI_DISPLAY_TYPE != NO_DISPLAY
     // some debugging commands normally disabled

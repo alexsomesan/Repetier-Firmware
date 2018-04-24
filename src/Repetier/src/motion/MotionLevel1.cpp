@@ -90,7 +90,9 @@ void Motion1::init() {
     last = first = length = 0;
     process = lengthUnprocessed = 0;
     endstopMode = EndstopMode::DISABLED;
+#if FEATURE_AUTOLEVEL
     resetTransformationMatrix(true);
+#endif
     setFromConfig(); // initial config
 }
 
@@ -1061,7 +1063,7 @@ void Motion1Buffer::unblock() {
 void Motion1::moveToParkPosition() {
     setTmpPositionXYZ(parkPosition[X_AXIS], parkPosition[Y_AXIS], IGNORE_COORDINATE);
     moveByOfficial(tmpPosition, XY_SPEED);
-    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]) );
+    setTmpPositionXYZ(IGNORE_COORDINATE, IGNORE_COORDINATE, RMath::min(maxPos[Z_AXIS], parkPosition[Z_AXIS] + currentPosition[Z_AXIS]));
     moveByOfficial(tmpPosition, Z_SPEED);
 }
 
@@ -1424,6 +1426,7 @@ void Motion1::transformFromPrinter(float x, float y, float z, float& transX, flo
 #endif
 }
 
+#if FEATURE_AUTOLEVEL
 void Motion1::resetTransformationMatrix(bool silent) {
     autolevelTransformation[0] = autolevelTransformation[4] = autolevelTransformation[8] = 1;
     autolevelTransformation[1] = autolevelTransformation[2] = autolevelTransformation[3] = autolevelTransformation[5] = autolevelTransformation[6] = autolevelTransformation[7] = 0;
@@ -1461,3 +1464,4 @@ void Motion1::buildTransformationMatrix(Plane& plane) {
 
     Com::printArrayFLN(Com::tTransformationMatrix, autolevelTransformation, 9, 6);
 }
+#endif

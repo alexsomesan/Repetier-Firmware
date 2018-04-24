@@ -405,7 +405,7 @@ void MCode_115(GCode* com) {
     Com::cap(PSTR("PROGRESS:0"));
 #endif
     Com::cap(PSTR("AUTOREPORT_TEMP:1"));
-//#if EEPROM_MODE != 0
+    //#if EEPROM_MODE != 0
     Com::cap(PSTR("EEPROM:1"));
 //#else
 //    Com::cap(PSTR("EEPROM:0"));
@@ -487,7 +487,7 @@ void MCode_122(GCode* com) {
     int b = NUM_MOTORS;
     if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
         a = com->P;
-        b = a+1;
+        b = a + 1;
     }
     for (int i = a; i < b; i++) {
         Com::printF(PSTR("\tStepper Driver "), i);
@@ -659,7 +659,7 @@ void MCode_200(GCode* com) {
         d = com->R;
     if (com->hasD())
         d = com->D;
-        Tool::getTool(extruderId)->setDiameter(d);
+    Tool::getTool(extruderId)->setDiameter(d);
     if (extruderId == Tool::getActiveToolId())
         Commands::changeFlowrateMultiply(Printer::extrudeMultiply);
     if (d == 0) {
@@ -693,8 +693,8 @@ void MCode_204(GCode* com) {
         return;
     }
     pid->setPID(com->hasX() ? com->X : pid->getP(),
-        com->hasY() ? com->Y : pid->getI(),
-        com->hasZ() ? com->Z : pid->getD());
+                com->hasY() ? com->Y : pid->getI(),
+                com->hasZ() ? com->Z : pid->getD());
 }
 
 void MCode_205(GCode* com) {
@@ -862,26 +862,32 @@ void MCode_303(GCode* com) {
 }
 
 void MCode_320(GCode* com) {
+#if FEATURE_AUTOLEVEL
     Printer::setAutolevelActive(true);
     if (com->hasS() && com->S) {
         EEPROM::storeDataIntoEEPROM();
     }
+#endif
 }
 
 void MCode_321(GCode* com) {
+#if FEATURE_AUTOLEVEL
     Printer::setAutolevelActive(false);
     if (com->hasS() && com->S) {
         if (com->S == 3)
             Motion1::resetTransformationMatrix(false);
         EEPROM::storeDataIntoEEPROM();
     }
+#endif
 }
 
 void MCode_322(GCode* com) {
+#if FEATURE_AUTOLEVEL
     Motion1::resetTransformationMatrix(false);
     if (com->hasS() && com->S) {
         EEPROM::storeDataIntoEEPROM();
     }
+#endif
 }
 
 void MCode_323(GCode* com) {
@@ -1217,6 +1223,17 @@ void MCode_910(GCode* com) {
 #if STEPPER_CURRENT_CONTROL == CURRENT_CONTROL_MCP4728
     dacCommitEeprom();
 #endif
+}
+
+void MCode_914(GCode* com) {
+    if (com->hasX())
+        XMotor.setSGT((int8_t)com->X);
+    if (com->hasY())
+        YMotor.setSGT((int8_t)com->Y);
+    if (com->hasZ())
+        ZMotor.setSGT((int8_t)com->Z);
+    if (com->hasE())
+        E1Motor.setSGT((int8_t)com->E);
 }
 
 void MCode_998(GCode* com) {

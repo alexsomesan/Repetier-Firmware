@@ -134,11 +134,16 @@ public:
         Com::printFLN(PSTR("chip version "), driver.version());
         while (!(driver.stst()))
             ;                          // Wait for motor stand-still
-        driver.I_scale_analog(true);   // Set current reference source
+        driver.I_scale_analog(false);  // Set current reference source
         driver.interpolate(false);     // Set internal microstep interpolation
         driver.internal_Rsense(false); // External current sense resistor
-        driver.sgt(0);                 // Netural Stallguard threshold
-        driver.diag1_stall(true);      // DIAG1 pin as stall signal (endstop)
+        driver.chopper_mode(0);
+        driver.off_time(5);
+        driver.blank_time(2);
+        driver.coolstep_min_speed(300);
+        driver.sgt(0);                  // Netural Stallguard threshold
+        driver.diag1_stall(true);       // DIAG1 pin as stall signal (endstop)
+        driver.diag1_active_high(true); // StallGuard pulses active high
         enableCls::on();
         return true;
     }
@@ -159,27 +164,33 @@ public:
         Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
         Com::printFLN(PSTR("\tRMS current "), driver.rms_current());
         Com::printFLN(PSTR("\tMicrosteps "), driver.microsteps());
+        Com::printFLN(PSTR("\tStallguard threshold "), driver.sgt());
         Com::printFLN(PSTR("\tStallguard value "), driver.sg_result());
         Com::printFLN(PSTR("\tOver temperature "), driver.ot());
         Com::printFLN(PSTR("\tOver temperature prewarn "), driver.otpw());
     }
 
     inline void beforeHoming() {
-        backup.GCONF = driver.GCONF();
-        backup.CHOPCONF = driver.CHOPCONF();
-        backup.COOLCONF = driver.COOLCONF();
-        backup.PWMCONF = driver.PWMCONF();
-        backup.TCOOLTHRS = driver.TCOOLTHRS();
-        backup.TPWMTHRS = driver.TPWMTHRS();
+        // backup.GCONF = driver.GCONF();
+        // backup.CHOPCONF = driver.CHOPCONF();
+        // backup.COOLCONF = driver.COOLCONF();
+        // backup.PWMCONF = driver.PWMCONF();
+        // backup.TCOOLTHRS = driver.TCOOLTHRS();
+        // backup.TPWMTHRS = driver.TPWMTHRS();
     }
 
     inline void afterHoming() {
-        driver.GCONF(backup.GCONF);
-        driver.CHOPCONF(backup.CHOPCONF);
-        driver.COOLCONF(backup.COOLCONF);
-        driver.PWMCONF(backup.PWMCONF);
-        driver.TCOOLTHRS(backup.TCOOLTHRS);
-        driver.TPWMTHRS(backup.TPWMTHRS);
+        // driver.GCONF(backup.GCONF);
+        // driver.CHOPCONF(backup.CHOPCONF);
+        // driver.COOLCONF(backup.COOLCONF);
+        // driver.PWMCONF(backup.PWMCONF);
+        // driver.TCOOLTHRS(backup.TCOOLTHRS);
+        // driver.TPWMTHRS(backup.TPWMTHRS);
+    }
+
+    inline void setSGT(int8_t sgtVal) {
+        waitForStandstill();
+        driver.sgt(sgtVal);
     }
 
 private:
@@ -192,4 +203,14 @@ private:
         uint32_t TCOOLTHRS;
         uint32_t TPWMTHRS;
     } backup;
+
+    inline bool waitForStandstill() {
+        driver.test_connection();
+        if (driver.test_connection() != 0) {
+            return false;
+        }
+        while (!(driver.stst()))
+            ;
+        return true;
+    }
 };
