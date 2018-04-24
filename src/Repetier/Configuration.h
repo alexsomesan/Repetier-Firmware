@@ -317,15 +317,15 @@ It also can add a delay to wait for spindle to run on full speed.
 #define DOOR_PIN -1
 #define DOOR_PULLUP 1
 #define DOOR_INVERTING 1
-#define ENDSTOP_X_BACK_MOVE 30
-#define ENDSTOP_Y_BACK_MOVE 5
-#define ENDSTOP_Z_BACK_MOVE 1
-#define ENDSTOP_X_RETEST_REDUCTION_FACTOR 2
-#define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 2
-#define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 2
-#define ENDSTOP_X_BACK_ON_HOME 0.5
-#define ENDSTOP_Y_BACK_ON_HOME 0.5
-#define ENDSTOP_Z_BACK_ON_HOME 0
+#define ENDSTOP_X_BACK_MOVE 0
+#define ENDSTOP_Y_BACK_MOVE 0
+#define ENDSTOP_Z_BACK_MOVE 0
+#define ENDSTOP_X_RETEST_REDUCTION_FACTOR 1
+#define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 1
+#define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 1
+#define ENDSTOP_X_BACK_ON_HOME 5
+#define ENDSTOP_Y_BACK_ON_HOME 5
+#define ENDSTOP_Z_BACK_ON_HOME 10
 #define ALWAYS_CHECK_ENDSTOPS 1
 #define MOVE_X_WHEN_HOMED 0
 #define MOVE_Y_WHEN_HOMED 0
@@ -474,7 +474,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_RUN_AFTER_EVERY_PROBE ""
 #define Z_PROBE_REQUIRES_HEATING 1
 #define Z_PROBE_MIN_TEMPERATURE 150
-#define FEATURE_AUTOLEVEL 1
+#define FEATURE_AUTOLEVEL 0
 #define FEATURE_SOFTWARE_LEVELING 0
 #define Z_PROBE_X1 60
 #define Z_PROBE_Y1 130
@@ -617,6 +617,10 @@ Values must be in range 1..255
     0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, \
     0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+\
+\
+\
+\
 \
 \
 \

@@ -62,11 +62,11 @@ IO_INPUT(IOEndstopZMax, ORIG_Z_MAX_PIN)
 // axes except E even if you have none!
 
 ENDSTOP_NONE(endstopXMin)
-ENDSTOP_SWITCH_HW(endstopXMax, IOEndstopXMax, X_AXIS)
+ENDSTOP_SWITCH(endstopXMax, IOEndstopXMax)
 ENDSTOP_NONE(endstopYMin)
-ENDSTOP_SWITCH_HW(endstopYMax, IOEndstopYMax, Y_AXIS)
+ENDSTOP_SWITCH(endstopYMax, IOEndstopYMax)
 ENDSTOP_NONE(endstopZMin)
-ENDSTOP_SWITCH_HW(endstopZMax, IOEndstopZMax, Z_AXIS)
+ENDSTOP_SWITCH(endstopZMax, IOEndstopZMax)
 
 // Define fans
 
@@ -123,9 +123,9 @@ IO_PWM_SOFTWARE(PWMBed1, IOBed1, 1)
 // STEPPER_SIMPLE(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, endstopNone, endstopNone)
 // STEPPER_SIMPLE(E2Motor, IOE2Step, IOE2Dir, IOE2Enable, endstopNone, endstopNone)
 
-STEPPER_TMC2130(XMotor, IOX1Step, IOX1Dir, IOX1Enable, endstopNone, endstopXMax, ORIG_X_CS_PIN)
-STEPPER_TMC2130(YMotor, IOY1Step, IOY1Dir, IOY1Enable, endstopNone, endstopYMax, ORIG_Y_CS_PIN)
-STEPPER_TMC2130(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, endstopNone, endstopZMax, ORIG_Z_CS_PIN)
+STEPPER_TMC2130(XMotor, IOX1Step, IOX1Dir, IOX1Enable, endstopXMin, endstopXMax, ORIG_X_CS_PIN)
+STEPPER_TMC2130(YMotor, IOY1Step, IOY1Dir, IOY1Enable, endstopYMin, endstopYMax, ORIG_Y_CS_PIN)
+STEPPER_TMC2130(ZMotor, IOZ1Step, IOZ1Dir, IOZ1Enable, endstopZMin, endstopZMax, ORIG_Z_CS_PIN)
 STEPPER_TMC2130(E1Motor, IOE1Step, IOE1Dir, IOE1Enable, endstopNone, endstopNone, ORIG_E0_CS_PIN)
 
 // Heat manages are used for every component that needs to
