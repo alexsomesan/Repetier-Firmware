@@ -2,5 +2,5 @@
     "board": "arduino:sam:arduino_due_x_dbg",
     "sketch": "Repetier.ino",
     "output": "../_build",
-    "port": "COM4"
+    "port": "COM5"
 }

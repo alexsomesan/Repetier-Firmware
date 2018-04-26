@@ -61,17 +61,17 @@
 #define TEMPERATURE_CONTROL_RANGE 20 // Start with controlling if temperature is +/- this value to target temperature
 
 // 0 = Cartesian, 1 = CoreXYZ, 2 = delta
-#define PRINTER_TYPE 1
+#define PRINTER_TYPE 0
 /* Ratios for core xyz. First index denotes motor and second axis.
 For each motor you can set the ratio of x,y,z position that adds
 to the position. 0 = no contribution. */
 // X motor = x + y
 #define COREXYZ_X_X 1
-#define COREXYZ_X_Y 1
+#define COREXYZ_X_Y 0
 #define COREXYZ_X_Z 0
 // Y motor = x - y
-#define COREXYZ_Y_X 1
-#define COREXYZ_Y_Y -1
+#define COREXYZ_Y_X 0
+#define COREXYZ_Y_Y 1
 #define COREXYZ_Y_Z 0
 // Z motor = z
 #define COREXYZ_Z_X 0
@@ -111,10 +111,10 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
 // /** Trinamic Settings **/
 #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
-#define ORIG_X_CS_PIN 29
-#define ORIG_Y_CS_PIN 30
-#define ORIG_Z_CS_PIN 28
-#define ORIG_E0_CS_PIN 31
+#define ORIG_X_CS_PIN ORIG_X_MIN_PIN
+#define ORIG_Y_CS_PIN ORIG_Y_MIN_PIN
+#define ORIG_Z_CS_PIN ORIG_Z_MIN_PIN
+#define ORIG_E1_CS_PIN SERVO3_PIN
 
 /** Axes are homed in order of priority (0..10) if homing direction is not 0. */
 #define X_HOME_PRIORITY 1
@@ -437,10 +437,10 @@ M340 P<servoId> S<pulseInUS>   / ServoID = 0..3  pulseInUs = 500..2500
 Servos are controlled by a pulse width normally between 500 and 2500 with 1500ms in center position. 0 turns servo off.
 WARNING: Servos can draw a considerable amount of current. Make sure your system can handle this or you may risk your hardware!
 */
-#define SERVO0_PIN 11
-#define SERVO1_PIN -1
-#define SERVO2_PIN -1
-#define SERVO3_PIN -1
+#define SERVO0_PIN -1
+#define SERVO1_PIN 5
+#define SERVO2_PIN 6
+#define SERVO3_PIN 39
 #define SERVO0_NEUTRAL_POS 1050
 #define SERVO1_NEUTRAL_POS -1
 #define SERVO2_NEUTRAL_POS -1
@@ -462,7 +462,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_ON_HIGH 1
 #define Z_PROBE_X_OFFSET 0
 #define Z_PROBE_Y_OFFSET 0
-#define Z_PROBE_WAIT_BEFORE_TEST 0
+#define Z_PROBE_WAIT_BEFORE_TEST
 #define Z_PROBE_SPEED 2
 #define Z_PROBE_XY_SPEED 150
 #define Z_PROBE_SWITCHING_DISTANCE 1
@@ -617,6 +617,18 @@ Values must be in range 1..255
     0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, \
     0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 \
 \
 \
