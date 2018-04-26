@@ -6,7 +6,8 @@ public:
     StepperDriverBase(EndstopDriver* minES, EndstopDriver* maxES)
         : minEndstop(minES)
         , maxEndstop(maxES)
-        , direction(true) {}
+        , direction(true)
+        , label(name) {}
     virtual ~StepperDriverBase() {}
     inline EndstopDriver* getMinEndstop() { return minEndstop; }
     inline EndstopDriver* getMaxEndstop() { return maxEndstop; }
@@ -38,13 +39,14 @@ public:
     // or otherwise prepare for endstop detection.
     virtual void beforeHoming() {}
     virtual void afterHoming() {}
-    virtual void status() {
+    virtual void status(void* status = NULL) {
         Com::printFLN(PSTR("not implemented"));
     }
     EndstopDriver* minEndstop;
     EndstopDriver* maxEndstop;
     bool direction;
     // uint32_t position;
+    FSTRINGVAR(label)
 };
 
 /// Plain stepper driver with optional endstops attached.
@@ -86,6 +88,17 @@ public:
 };
 
 /// TMC2130 stepper driver with SPI configuration.
+
+typedef struct {
+    uint8_t version;
+    uint8_t conntest;
+    uint16_t current;
+    uint16_t microsteps;
+    uint8_t stallguard_thr;
+    uint16_t stallguard_result;
+    bool ot, otpw;
+} TMC2130DriverStatus;
+
 template <class stepCls, class dirCls, class enableCls>
 class TMC2130StepperDriver : public StepperDriverBase {
 public:
@@ -159,33 +172,44 @@ public:
             ;
         driver.rms_current(current);
     }
-    inline void status() final {
-        Com::printFLN(PSTR("TMC2130 driver version "), driver.version());
-        Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
-        Com::printFLN(PSTR("\tRMS current "), driver.rms_current());
-        Com::printFLN(PSTR("\tMicrosteps "), driver.microsteps());
-        Com::printFLN(PSTR("\tStallguard threshold "), driver.sgt());
-        Com::printFLN(PSTR("\tStallguard value "), driver.sg_result());
-        Com::printFLN(PSTR("\tOver temperature "), driver.ot());
-        Com::printFLN(PSTR("\tOver temperature prewarn "), driver.otpw());
+    inline void status(void* s) final {
+        if (NULL == s)
+            return;
+        TMC2130DriverStatus* status = (TMC2130DriverStatus*)s;
+        // Com::printFLN(PSTR("TMC2130 driver version "), driver.version());
+        status->version = driver.version();
+        // Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
+        status->conntest = driver.test_connection();
+        // Com::printFLN(PSTR("\tRMS current "), driver.rms_current());
+        status->current = driver.rms_current();
+        // Com::printFLN(PSTR("\tMicrosteps "), driver.microsteps());
+        status->microsteps = driver.microsteps();
+        // Com::printFLN(PSTR("\tStallguard threshold "), driver.sgt());
+        status->stallguard_thr = driver.sgt();
+        // Com::printFLN(PSTR("\tStallguard value "), driver.sg_result());
+        status->stallguard_result = driver.sg_result();
+        // Com::printFLN(PSTR("\tOver temperature "), driver.ot());
+        status->ot = driver.ot();
+        // Com::printFLN(PSTR("\tOver temperature prewarn "), driver.otpw());
+        status->otpw = driver.otpw();
     }
 
     inline void beforeHoming() {
-        // backup.GCONF = driver.GCONF();
-        // backup.CHOPCONF = driver.CHOPCONF();
-        // backup.COOLCONF = driver.COOLCONF();
-        // backup.PWMCONF = driver.PWMCONF();
-        // backup.TCOOLTHRS = driver.TCOOLTHRS();
-        // backup.TPWMTHRS = driver.TPWMTHRS();
+        backup.GCONF = driver.GCONF();
+        backup.CHOPCONF = driver.CHOPCONF();
+        backup.COOLCONF = driver.COOLCONF();
+        backup.PWMCONF = driver.PWMCONF();
+        backup.TCOOLTHRS = driver.TCOOLTHRS();
+        backup.TPWMTHRS = driver.TPWMTHRS();
     }
 
     inline void afterHoming() {
-        // driver.GCONF(backup.GCONF);
-        // driver.CHOPCONF(backup.CHOPCONF);
-        // driver.COOLCONF(backup.COOLCONF);
-        // driver.PWMCONF(backup.PWMCONF);
-        // driver.TCOOLTHRS(backup.TCOOLTHRS);
-        // driver.TPWMTHRS(backup.TPWMTHRS);
+        driver.GCONF(backup.GCONF);
+        driver.CHOPCONF(backup.CHOPCONF);
+        driver.COOLCONF(backup.COOLCONF);
+        driver.PWMCONF(backup.PWMCONF);
+        driver.TCOOLTHRS(backup.TCOOLTHRS);
+        driver.TPWMTHRS(backup.TPWMTHRS);
     }
 
     inline void setSGT(int8_t sgtVal) {

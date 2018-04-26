@@ -482,7 +482,19 @@ void MCode_120(GCode* com) {
 #endif
 }
 
+#define STATUS_COLUMN_WIDTH 10
+#define STATUS_BUFFER_LENGTH 255
+#define ZERO_BUFFER(buf) \
+    for (int idx = 0; idx < STATUS_BUFFER_LENGTH; idx++) \
+        ((char*)buf)[idx] = 0;
+#define CLEAR_BUFFER(buf) \
+    for (int idx = 0; idx < STATUS_BUFFER_LENGTH; idx++) \
+        ((char*)buf)[idx] = ' '; \
+    ((char*)buf)[STATUS_BUFFER_LENGTH - 1] = 0;
+#define MOTOR_NAMES enum
 void MCode_122(GCode* com) {
+    TMC2130DriverStatus driver_status[NUM_MOTORS];
+    char status_line[STATUS_BUFFER_LENGTH];
     int a = 0;
     int b = NUM_MOTORS;
     if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
@@ -490,9 +502,16 @@ void MCode_122(GCode* com) {
         b = a + 1;
     }
     for (int i = a; i < b; i++) {
-        Com::printF(PSTR("\tStepper Driver "), i);
-        Com::printFLN(PSTR(" status:"));
-        Motion1::motors[i]->status();
+        Motion1::drivers[i]->status(&(driver_status[i]));
+    }
+    Com::printFLN(PSTR("--- TMC2130 Drivers Status ---"));
+    CLEAR_BUFFER(status_line);
+    for (int i = a; i < b; i++) {
+        status_line[STATUS_COLUMN_WIDTH * (i + 1)] = 'X' + i;
+    }
+    Com::printFLN(status_line);
+    for (int i = a; i < b; i++) {
+        driver_status[i];
     }
 }
 
