@@ -33,7 +33,7 @@
     SimpleStepperDriver<stepPin, dirPin, enablePin> name(&minEndstop, &maxEndstop);
 
 #define STEPPER_TMC2130(name, stepPin, dirPin, enablePin, minEndstop, maxEndstop, csPin) \
-    TMC2130StepperDriver<stepPin, dirPin, enablePin> name(&minEndstop, &maxEndstop, csPin);
+    TMC2130StepperDriver<stepPin, dirPin, enablePin> name(#name, &minEndstop, &maxEndstop, csPin);
 
 #elif IO_TARGET == 1 // Init drivers at startup
 

@@ -6,8 +6,7 @@ public:
     StepperDriverBase(EndstopDriver* minES, EndstopDriver* maxES)
         : minEndstop(minES)
         , maxEndstop(maxES)
-        , direction(true)
-        , label(name) {}
+        , direction(true) {}
     virtual ~StepperDriverBase() {}
     inline EndstopDriver* getMinEndstop() { return minEndstop; }
     inline EndstopDriver* getMaxEndstop() { return maxEndstop; }
@@ -46,7 +45,6 @@ public:
     EndstopDriver* maxEndstop;
     bool direction;
     // uint32_t position;
-    FSTRINGVAR(label)
 };
 
 /// Plain stepper driver with optional endstops attached.
@@ -90,6 +88,7 @@ public:
 /// TMC2130 stepper driver with SPI configuration.
 
 typedef struct {
+    const char* name;
     uint8_t version;
     uint8_t conntest;
     uint16_t current;
@@ -102,9 +101,10 @@ typedef struct {
 template <class stepCls, class dirCls, class enableCls>
 class TMC2130StepperDriver : public StepperDriverBase {
 public:
-    TMC2130StepperDriver(EndstopDriver* minES, EndstopDriver* maxES, uint16_t csPin)
+    TMC2130StepperDriver(const char* label, EndstopDriver* minES, EndstopDriver* maxES, uint16_t csPin)
         : StepperDriverBase(minES, maxES)
-        , driver(TMC2130Stepper(csPin)) {}
+        , driver(TMC2130Stepper(csPin))
+        , name(label) {}
     inline bool stepCond() final {
         if (direction) {
             if (!maxEndstop->update()) {
@@ -136,15 +136,15 @@ public:
         enableCls::off();
     }
     inline bool init() final {
-        Com::printF(PSTR("TMC2130 initialization..."));
-        enableCls::off();
+        Com::printF(PSTR("TMC2130 init "), this->name);
+        disable();
         driver.begin(); // Initiate pins and registers
         driver.test_connection();
         if (driver.test_connection() != 0) {
-            Com::printFLN(PSTR("SPI error"));
+            Com::printFLN(PSTR(": SPI error"));
             return false;
         }
-        Com::printFLN(PSTR("chip version "), driver.version());
+        Com::printFLN(PSTR(": chip version "), driver.version());
         while (!(driver.stst()))
             ;                          // Wait for motor stand-still
         driver.I_scale_analog(false);  // Set current reference source
@@ -157,7 +157,7 @@ public:
         driver.sgt(0);                  // Netural Stallguard threshold
         driver.diag1_stall(true);       // DIAG1 pin as stall signal (endstop)
         driver.diag1_active_high(true); // StallGuard pulses active high
-        enableCls::on();
+        enable();
         return true;
     }
     inline bool implementSetMaxCurrent() { return true; }
@@ -176,6 +176,7 @@ public:
         if (NULL == s)
             return;
         TMC2130DriverStatus* status = (TMC2130DriverStatus*)s;
+        status->name = this->name;
         // Com::printFLN(PSTR("TMC2130 driver version "), driver.version());
         status->version = driver.version();
         // Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
@@ -227,6 +228,7 @@ private:
         uint32_t TCOOLTHRS;
         uint32_t TPWMTHRS;
     } backup;
+    const char* name PROGMEM;
 
     inline bool waitForStandstill() {
         driver.test_connection();
