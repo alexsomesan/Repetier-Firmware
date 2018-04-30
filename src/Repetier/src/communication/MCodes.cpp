@@ -491,28 +491,36 @@ void MCode_120(GCode* com) {
     for (int idx = 0; idx < STATUS_BUFFER_LENGTH; idx++) \
         ((char*)buf)[idx] = ' '; \
     ((char*)buf)[STATUS_BUFFER_LENGTH - 1] = 0;
-#define MOTOR_NAMES enum
+#define TEXT_AT_COLUMN(text, column, buffer) \
+    memcpy(((char*)buffer) + (STATUS_COLUMN_WIDTH * (column)), text, strlen(text));
+
 void MCode_122(GCode* com) {
     TMC2130DriverStatus driver_status[NUM_MOTORS];
     char status_line[STATUS_BUFFER_LENGTH];
-    int a = 0;
-    int b = NUM_MOTORS;
+    char column[STATUS_COLUMN_WIDTH];
+    int a = 0, b = NUM_MOTORS, i;
+    ZERO_BUFFER(status_line)
     if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
         a = com->P;
         b = a + 1;
     }
-    for (int i = a; i < b; i++) {
+    for (i = a; i < b; i++) {
         Motion1::drivers[i]->status(&(driver_status[i]));
     }
-    Com::printFLN(PSTR("--- TMC2130 Drivers Status ---"));
+    Com::printFLN(PSTR("--- TMC2130 Drivers Status --- "));
     CLEAR_BUFFER(status_line);
-    for (int i = a; i < b; i++) {
-        status_line[STATUS_COLUMN_WIDTH * (i + 1)] = 'X' + i;
+    TEXT_AT_COLUMN(PSTR("Driver"), 0, status_line)
+    for (i = a; i < b; i++) {
+        TEXT_AT_COLUMN(driver_status[i].name, i + 1, status_line)
     }
     Com::printFLN(status_line);
-    for (int i = a; i < b; i++) {
-        driver_status[i];
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("version"), 0, status_line)
+    for (i = a; i < b; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].version, column, 10), i + 1, status_line)
     }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
 }
 
 void MCode_140(GCode* com) {
