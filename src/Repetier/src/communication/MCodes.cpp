@@ -482,8 +482,8 @@ void MCode_120(GCode* com) {
 #endif
 }
 
-#define STATUS_COLUMN_WIDTH 10
-#define STATUS_BUFFER_LENGTH 255
+#define STATUS_COLUMN_WIDTH 14
+#define STATUS_BUFFER_LENGTH (STATUS_COLUMN_WIDTH * (1 + NUM_MOTORS) + 1)
 #define ZERO_BUFFER(buf) \
     for (int idx = 0; idx < STATUS_BUFFER_LENGTH; idx++) \
         ((char*)buf)[idx] = 0;
@@ -498,26 +498,75 @@ void MCode_122(GCode* com) {
     TMC2130DriverStatus driver_status[NUM_MOTORS];
     char status_line[STATUS_BUFFER_LENGTH];
     char column[STATUS_COLUMN_WIDTH];
-    int a = 0, b = NUM_MOTORS, i;
+    uint8_t first = 0, last = NUM_MOTORS, i, m;
     ZERO_BUFFER(status_line)
     if (com->hasP() && com->P >= 0 && com->P < NUM_MOTORS) {
-        a = com->P;
-        b = a + 1;
+        first = com->P;
+        last = first + 1;
     }
-    for (i = a; i < b; i++) {
-        Motion1::drivers[i]->status(&(driver_status[i]));
+    for (i = 0; m = first + i, i < last - first; i++) {
+        Motion1::drivers[m]->status(&(driver_status[i]));
+        HAL::delayMilliseconds(10);
     }
     Com::printFLN(PSTR("--- TMC2130 Drivers Status --- "));
     CLEAR_BUFFER(status_line);
     TEXT_AT_COLUMN(PSTR("Driver"), 0, status_line)
-    for (i = a; i < b; i++) {
+    for (i = 0; i < last - first; i++) {
         TEXT_AT_COLUMN(driver_status[i].name, i + 1, status_line)
     }
     Com::printFLN(status_line);
     CLEAR_BUFFER(status_line);
     TEXT_AT_COLUMN(PSTR("version"), 0, status_line)
-    for (i = a; i < b; i++) {
+    for (i = 0; i < last - first; i++) {
         TEXT_AT_COLUMN(itoa(driver_status[i].version, column, 10), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("connection"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(driver_status[i].conntest == 0 ? PSTR("OK") : PSTR("ERROR"), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("over temp"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(driver_status[i].ot ? "ALARM" : "OK", i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("OT warning"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(driver_status[i].otpw ? "ALARM" : "OK", i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("current (RMS)"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].current, column, 10), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("microsteps"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].microsteps, column, 10), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("SG threshold"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].stallguard_thr, column, 10), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("SG result"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].stallguard_result, column, 10), i + 1, status_line)
+    }
+    Com::printFLN(status_line);
+    CLEAR_BUFFER(status_line);
+    TEXT_AT_COLUMN(PSTR("CS actual"), 0, status_line)
+    for (i = 0; i < last - first; i++) {
+        TEXT_AT_COLUMN(itoa(driver_status[i].csact, column, 10), i + 1, status_line)
     }
     Com::printFLN(status_line);
     CLEAR_BUFFER(status_line);

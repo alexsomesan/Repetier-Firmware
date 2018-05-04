@@ -96,6 +96,7 @@ typedef struct {
     uint8_t stallguard_thr;
     uint16_t stallguard_result;
     bool ot, otpw;
+    uint8_t csact;
 } TMC2130DriverStatus;
 
 template <class stepCls, class dirCls, class enableCls>
@@ -148,7 +149,7 @@ public:
         while (!(driver.stst()))
             ;                          // Wait for motor stand-still
         driver.I_scale_analog(false);  // Set current reference source
-        driver.interpolate(false);     // Set internal microstep interpolation
+        driver.interpolate(true);      // Set internal microstep interpolation
         driver.internal_Rsense(false); // External current sense resistor
         driver.chopper_mode(0);
         driver.off_time(5);
@@ -177,22 +178,15 @@ public:
             return;
         TMC2130DriverStatus* status = (TMC2130DriverStatus*)s;
         status->name = this->name;
-        // Com::printFLN(PSTR("TMC2130 driver version "), driver.version());
         status->version = driver.version();
-        // Com::printFLN(PSTR("\tConnection test "), driver.test_connection());
         status->conntest = driver.test_connection();
-        // Com::printFLN(PSTR("\tRMS current "), driver.rms_current());
         status->current = driver.rms_current();
-        // Com::printFLN(PSTR("\tMicrosteps "), driver.microsteps());
         status->microsteps = driver.microsteps();
-        // Com::printFLN(PSTR("\tStallguard threshold "), driver.sgt());
         status->stallguard_thr = driver.sgt();
-        // Com::printFLN(PSTR("\tStallguard value "), driver.sg_result());
         status->stallguard_result = driver.sg_result();
-        // Com::printFLN(PSTR("\tOver temperature "), driver.ot());
         status->ot = driver.ot();
-        // Com::printFLN(PSTR("\tOver temperature prewarn "), driver.otpw());
         status->otpw = driver.otpw();
+        status->csact = driver.cs_actual();
     }
 
     inline void beforeHoming() {
