@@ -93,7 +93,7 @@ typedef struct {
     uint8_t conntest;
     uint16_t current;
     uint16_t microsteps;
-    uint8_t stallguard_thr;
+    int8_t stallguard_thr;
     uint16_t stallguard_result;
     bool ot, otpw;
     uint8_t csact;
@@ -102,10 +102,11 @@ typedef struct {
 template <class stepCls, class dirCls, class enableCls>
 class TMC2130StepperDriver : public StepperDriverBase {
 public:
-    TMC2130StepperDriver(const char* label, EndstopDriver* minES, EndstopDriver* maxES, uint16_t csPin)
+    TMC2130StepperDriver(const char* label, uint16_t coolStMin, EndstopDriver* minES, EndstopDriver* maxES, uint16_t csPin)
         : StepperDriverBase(minES, maxES)
         , driver(TMC2130Stepper(csPin))
-        , name(label) {}
+        , name(label)
+        , coolstep_sp_min(coolStMin) {}
     inline bool stepCond() final {
         if (direction) {
             if (!maxEndstop->update()) {
@@ -154,7 +155,7 @@ public:
         driver.chopper_mode(0);
         driver.off_time(5);
         driver.blank_time(2);
-        driver.coolstep_min_speed(300);
+        driver.coolstep_min_speed(coolstep_sp_min);
         driver.sgt(0);                  // Netural Stallguard threshold
         driver.diag1_stall(true);       // DIAG1 pin as stall signal (endstop)
         driver.diag1_active_high(true); // StallGuard pulses active high
@@ -190,39 +191,57 @@ public:
     }
 
     inline void beforeHoming() {
-        backup.GCONF = driver.GCONF();
-        backup.CHOPCONF = driver.CHOPCONF();
-        backup.COOLCONF = driver.COOLCONF();
-        backup.PWMCONF = driver.PWMCONF();
-        backup.TCOOLTHRS = driver.TCOOLTHRS();
-        backup.TPWMTHRS = driver.TPWMTHRS();
+        // backup.GCONF = driver.GCONF() & 0x3FFFF;
+        // backup.CHOPCONF = driver.CHOPCONF();
+        // backup.COOLCONF = driver.COOLCONF();
+        // backup.PWMCONF = driver.PWMCONF();
+        // backup.TCOOLTHRS = driver.TCOOLTHRS();
+        // backup.TPWMTHRS = driver.TPWMTHRS();
+        backup.coolstep_speed = driver.coolstep_min_speed();
+        backup.stealth_max_sp = driver.stealth_max_speed();
+        backup.stealth_state = driver.stealthChop();
+        waitForStandstill();                        // Wait for motor stand-still
+        driver.stealth_max_speed(0);                // Upper speedlimit for stealthChop
+        driver.stealthChop(false);                  // Turn off stealthChop
+        driver.coolstep_min_speed(coolstep_sp_min); // Minimum speed for StallGuard trigerring
+        driver.sg_filter(false);                    // Turn off StallGuard filtering
+        driver.diag1_stall(true);                   // Signal StallGuard on DIAG1 pin
+        driver.diag1_active_high(true);             // StallGuard pulses active high
     }
 
     inline void afterHoming() {
-        driver.GCONF(backup.GCONF);
-        driver.CHOPCONF(backup.CHOPCONF);
-        driver.COOLCONF(backup.COOLCONF);
-        driver.PWMCONF(backup.PWMCONF);
-        driver.TCOOLTHRS(backup.TCOOLTHRS);
-        driver.TPWMTHRS(backup.TPWMTHRS);
+        // driver.GCONF(backup.GCONF);
+        // driver.CHOPCONF(backup.CHOPCONF);
+        // driver.COOLCONF(backup.COOLCONF);
+        // driver.PWMCONF(backup.PWMCONF);
+        // driver.TCOOLTHRS(backup.TCOOLTHRS);
+        // driver.TPWMTHRS(backup.TPWMTHRS);
+        waitForStandstill();
+        driver.coolstep_min_speed(backup.coolstep_speed);
+        driver.stealth_max_speed(backup.stealth_max_sp);
+        driver.stealthChop(backup.stealth_state);
     }
 
     inline void setSGT(int8_t sgtVal) {
         waitForStandstill();
         driver.sgt(sgtVal);
     }
+    TMC2130Stepper driver;
 
 private:
-    TMC2130Stepper driver;
     struct {
-        uint32_t GCONF;
-        uint32_t CHOPCONF;
-        uint32_t COOLCONF;
-        uint32_t PWMCONF;
-        uint32_t TCOOLTHRS;
-        uint32_t TPWMTHRS;
+        // uint32_t GCONF;
+        // uint32_t CHOPCONF;
+        // uint32_t COOLCONF;
+        // uint32_t PWMCONF;
+        // uint32_t TCOOLTHRS;
+        // uint32_t TPWMTHRS;
+        uint32_t coolstep_speed;
+        uint32_t stealth_max_sp;
+        bool stealth_state;
     } backup;
     const char* name PROGMEM;
+    uint16_t coolstep_sp_min;
 
     inline bool waitForStandstill() {
         driver.test_connection();
