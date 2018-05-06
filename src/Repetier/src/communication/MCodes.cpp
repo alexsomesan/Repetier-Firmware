@@ -1310,6 +1310,14 @@ void MCode_914(GCode* com) {
         ZMotor.setSGT((int8_t)com->Z);
     if (com->hasE())
         E1Motor.setSGT((int8_t)com->E);
+    if (!(com->hasX() || com->hasY() || com->hasZ() || com->hasE())) {
+        Com::printInfoFLN(PSTR("Trinamic stallguard threshold"));
+        Com::printF(Com::tSpaceXColon, XMotor.driver.sg_stall_value());
+        Com::printF(Com::tSpaceYColon, YMotor.driver.sg_stall_value());
+        Com::printF(Com::tSpaceZColon, ZMotor.driver.sg_stall_value());
+        Com::printF(Com::tSpaceEColon, E1Motor.driver.sg_stall_value());
+        Com::println();
+    }
 }
 
 void MCode_998(GCode* com) {
