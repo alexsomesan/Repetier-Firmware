@@ -1320,6 +1320,24 @@ void MCode_914(GCode* com) {
     }
 }
 
+void MCode_950(GCode* com) {
+    if (com->hasS()) {
+        HAL::i2cStartWait(0x5A + I2C_WRITE);
+        HAL::i2cWrite(01);
+        HAL::i2cWrite((int8_t)com->S);
+        HAL::i2cStop();
+    } else {
+        HAL::i2cStartWait(0x5A + I2C_WRITE);
+        HAL::i2cWrite(02);
+        HAL::i2cStop();
+        HAL::i2cStartWait(0x5A + I2C_READ);
+        uint16_t fan_speed = HAL::i2cReadAck();
+        fan_speed = (fan_speed << 8) + HAL::i2cReadNak();
+        HAL::i2cStop();
+        Com::printFLN(PSTR("Fan speed: "), fan_speed);
+    }
+}
+
 void MCode_998(GCode* com) {
     UI_MESSAGE(com->S);
 }

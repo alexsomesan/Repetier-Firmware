@@ -1314,6 +1314,9 @@ void Commands::processMCode(GCode* com) {
     case 914: // M914 - Set Trinamic Stallguard threshold
         MCode_914(com);
         break;
+    case 950: // M950 - Set / Get case fan speed
+        MCode_950(com);
+        break;
 #if 0 && UI_DISPLAY_TYPE != NO_DISPLAY
     // some debugging commands normally disabled
     case 888:
