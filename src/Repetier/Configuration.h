@@ -61,17 +61,17 @@
 #define TEMPERATURE_CONTROL_RANGE 20 // Start with controlling if temperature is +/- this value to target temperature
 
 // 0 = Cartesian, 1 = CoreXYZ, 2 = delta
-#define PRINTER_TYPE 0
+#define PRINTER_TYPE 1
 /* Ratios for core xyz. First index denotes motor and second axis.
 For each motor you can set the ratio of x,y,z position that adds
 to the position. 0 = no contribution. */
 // X motor = x + y
 #define COREXYZ_X_X 1
-#define COREXYZ_X_Y 0
+#define COREXYZ_X_Y 1
 #define COREXYZ_X_Z 0
 // Y motor = x - y
-#define COREXYZ_Y_X 0
-#define COREXYZ_Y_Y 1
+#define COREXYZ_Y_X 1
+#define COREXYZ_Y_Y -1
 #define COREXYZ_Y_Z 0
 // Z motor = z
 #define COREXYZ_Z_X 0
@@ -111,10 +111,18 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 
 // /** Trinamic Settings **/
 #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
-#define ORIG_X_CS_PIN ORIG_X_MIN_PIN
-#define ORIG_Y_CS_PIN ORIG_Y_MIN_PIN
-#define ORIG_Z_CS_PIN ORIG_Z_MIN_PIN
-#define ORIG_E1_CS_PIN SERVO3_PIN
+
+// For dev board
+// #define ORIG_X_CS_PIN ORIG_X_MIN_PIN
+// #define ORIG_Y_CS_PIN ORIG_Y_MIN_PIN
+// #define ORIG_Z_CS_PIN ORIG_Z_MIN_PIN
+// #define ORIG_E1_CS_PIN SERVO3_PIN
+
+// For HEVO
+#define ORIG_X_CS_PIN 29
+#define ORIG_Y_CS_PIN 30
+#define ORIG_Z_CS_PIN 28
+#define ORIG_E1_CS_PIN 31
 
 #define TMC2130_TCOOLTHRS_X 400
 #define TMC2130_TCOOLTHRS_Y 400
@@ -166,9 +174,9 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define Y_MIN_POS -84
 #define Z_MIN_POS 0
 // Park position used when pausing from firmware side
-#if PRINTER_TYPE == 2
+#if PRINTER_TYPE == 1
 #define PARK_POSITION_X (0)
-#define PARK_POSITION_Y (70)
+#define PARK_POSITION_Y (0)
 #else
 #define PARK_POSITION_X (X_MIN_POS)
 #define PARK_POSITION_Y (Y_MIN_POS + Y_MAX_LENGTH)
@@ -621,6 +629,16 @@ Values must be in range 1..255
     0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, \
     0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 \
 \
 \
