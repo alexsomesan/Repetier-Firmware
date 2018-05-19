@@ -82,11 +82,11 @@ to the position. 0 = no contribution. */
 // This is for dummy endstops and for hardware endstops.
 // NOt disabling them is just a speed penalty
 #define NO_XMIN_ENDSTOP_TEST
-#define NO_XMAX_ENDSTOP_TEST
+// #define NO_XMAX_ENDSTOP_TEST
 #define NO_YMIN_ENDSTOP_TEST
-#define NO_YMAX_ENDSTOP_TEST
+// #define NO_YMAX_ENDSTOP_TEST
 #define NO_ZMIN_ENDSTOP_TEST
-#define NO_ZMAX_ENDSTOP_TEST
+// #define NO_ZMAX_ENDSTOP_TEST
 
 #define DISABLE_X 0
 #define DISABLE_Y 0
@@ -113,16 +113,16 @@ CONFIG_VARIABLE_EQ(EndstopDriver, *ZProbe, &endstopZMin)
 #define STEPPER_CURRENT_CONTROL CURRENT_CONTROL_TMC2130
 
 // For dev board
-// #define ORIG_X_CS_PIN ORIG_X_MIN_PIN
-// #define ORIG_Y_CS_PIN ORIG_Y_MIN_PIN
-// #define ORIG_Z_CS_PIN ORIG_Z_MIN_PIN
-// #define ORIG_E1_CS_PIN SERVO3_PIN
+#define ORIG_X_CS_PIN ORIG_X_MIN_PIN
+#define ORIG_Y_CS_PIN ORIG_Y_MIN_PIN
+#define ORIG_Z_CS_PIN ORIG_Z_MIN_PIN
+#define ORIG_E1_CS_PIN SERVO3_PIN
 
 // For HEVO
-#define ORIG_X_CS_PIN 29
-#define ORIG_Y_CS_PIN 30
-#define ORIG_Z_CS_PIN 28
-#define ORIG_E1_CS_PIN 31
+// #define ORIG_X_CS_PIN 29
+// #define ORIG_Y_CS_PIN 30
+// #define ORIG_Z_CS_PIN 28
+// #define ORIG_E1_CS_PIN 31
 
 #define TMC2130_TCOOLTHRS_X 400
 #define TMC2130_TCOOLTHRS_Y 400
@@ -629,6 +629,12 @@ Values must be in range 1..255
     0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, \
     0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \
+\
+\
+\
+\
+\
+\
 \
 \
 \
