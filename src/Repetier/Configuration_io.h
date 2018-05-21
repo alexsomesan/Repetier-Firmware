@@ -62,14 +62,15 @@ IO_INPUT(IOEndstopZMax, ORIG_Z_MAX_PIN)
 // axes except E even if you have none!
 
 ENDSTOP_NONE(endstopXMin)
-ENDSTOP_SWITCH_HW(endstopAMax, IOEndstopXMax, X_AXIS)
 ENDSTOP_NONE(endstopYMin)
-ENDSTOP_SWITCH_HW(endstopBMax, IOEndstopYMax, Y_AXIS)
 ENDSTOP_NONE(endstopZMin)
+
+ENDSTOP_SWITCH_HW(endstopAMax, IOEndstopXMax, X_AXIS)
+ENDSTOP_SWITCH_HW(endstopBMax, IOEndstopYMax, Y_AXIS)
 ENDSTOP_SWITCH_HW(endstopZMax, IOEndstopZMax, Z_AXIS)
 
-ENDSTOP_MERGE2(endstopXMax, endstopAMax, endstopBMax)
-ENDSTOP_MERGE2(endstopYMax, endstopAMax, endstopBMax)
+ENDSTOP_CHOOSE2(endstopXMax, endstopAMax, endstopBMax)
+ENDSTOP_CHOOSE2(endstopYMax, endstopAMax, endstopBMax)
 
 // Define fans
 

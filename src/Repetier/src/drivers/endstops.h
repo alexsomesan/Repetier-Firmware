@@ -79,7 +79,7 @@ public:
     }
 
     inline virtual bool update() final {
-        return state;
+        return (state = inp::get());
     }
     inline virtual bool triggered() final {
         return state;
@@ -203,5 +203,24 @@ public:
     }
     inline virtual bool implemented() final {
         return true;
+    }
+};
+
+/** Choose either one of 2 endstops. Returns true if any endstops are triggered. */
+class EndstopChoose2 : public EndstopDriver {
+    EndstopDriver *e1, *e2;
+
+public:
+    EndstopChoose2(EndstopDriver* _e1, EndstopDriver* _e2)
+        : e1(_e1)
+        , e2(_e2) {}
+    inline virtual bool update() final {
+        return (e1->update() || e2->update());
+    }
+    inline virtual bool triggered() final {
+        return (e1->triggered() || e2->triggered());
+    }
+    inline virtual bool implemented() final {
+        return (e1->implemented() || e2->implemented());
     }
 };

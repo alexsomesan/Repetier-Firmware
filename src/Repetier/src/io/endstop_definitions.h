@@ -23,6 +23,7 @@
 #undef ENDSTOP_MERGE2
 #undef ENDSTOP_MERGE3
 #undef ENDSTOP_MERGE4
+#undef ENDSTOP_CHOOSE2
 #undef ENDSTOP_SWITCH_HW
 
 #if IO_TARGET == 4
@@ -37,6 +38,7 @@
 #define ENDSTOP_MERGE2(name, e1, e2) extern EndstopMerge2 name;
 #define ENDSTOP_MERGE3(name, e1, e2, e3) extern EndstopMerge3 name;
 #define ENDSTOP_MERGE4(name, e1, e2, e3, e4) extern EndstopMerge4 name;
+#define ENDSTOP_CHOOSE2(name, e1, e2) extern EndstopChoose2 name;
 
 #elif IO_TARGET == 1 // Init
 
@@ -51,6 +53,7 @@
 #define ENDSTOP_MERGE2(name, e1, e2)
 #define ENDSTOP_MERGE3(name, e1, e2, e3)
 #define ENDSTOP_MERGE4(name, e1, e2, e3, e4)
+#define ENDSTOP_CHOOSE2(name, e1, e2)
 
 #elif IO_TARGET == 6
 
@@ -66,7 +69,7 @@
 #define ENDSTOP_MERGE2(name, e1, e2) EndstopMerge2 name(&e1, &e2);
 #define ENDSTOP_MERGE3(name, e1, e2, e3) EndstopMerge3 name(&e1, &e2, &e3);
 #define ENDSTOP_MERGE4(name, e1, e2, e3, e4) EndstopMerge4 name(&e1, &e2, &e3, &e4);
-
+#define ENDSTOP_CHOOSE2(name, e1, e2) EndstopChoose2 name(&e1, &e2);
 #elif IO_TARGET == 5
 
 #define ENDSTOP_NONE(name)
@@ -77,7 +80,7 @@
 #define ENDSTOP_MERGE2(name, e1, e2) name.update();
 #define ENDSTOP_MERGE3(name, e1, e2, e3) name.update();
 #define ENDSTOP_MERGE4(name, e1, e2, e3, e4) name.update();
-
+#define ENDSTOP_CHOOSE2(name, e1, e2) name.update();
 #else
 
 #define ENDSTOP_NONE(name)
@@ -88,5 +91,5 @@
 #define ENDSTOP_MERGE2(name, e1, e2)
 #define ENDSTOP_MERGE3(name, e1, e2, e3)
 #define ENDSTOP_MERGE4(name, e1, e2, e3, e4)
-
+#define ENDSTOP_CHOOSE2(name, e1, e2)
 #endif
