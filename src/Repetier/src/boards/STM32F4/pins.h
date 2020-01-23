@@ -29,6 +29,10 @@
 #include "boards/rumba32.h"
 #endif
 
+#if MOTHERBOARD == MOTHERBOARD_BTT_SKR_PRO_V1_1
+#include "boards/btt-skrpro-v1.1.h"
+#endif
+
 #ifndef SDSSORIG
 #define SDSSORIG -1
 #endif
