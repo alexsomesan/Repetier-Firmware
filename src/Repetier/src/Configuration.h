@@ -40,7 +40,7 @@
 #define NUM_TOOLS 4
 #define NUM_EXTRUDER 2
 #define NUM_SERVOS 1                  // Number of servos available
-#define MOTHERBOARD MOTHERBOARD_FELIX // 405
+#define MOTHERBOARD MOTHERBOARD_BTT_SKR_PRO_V1_1 // 405
 #define EEPROM_MODE 1
 #define RFSERIAL Serial
 //#define EXTERNALSERIAL  use Arduino serial library instead of build in. Requires more ram, has only 63 byte input buffer.
